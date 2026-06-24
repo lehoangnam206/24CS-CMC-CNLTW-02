@@ -1,0 +1,66 @@
+﻿@{
+    ViewData["Title"] = "Thanh toán";
+}
+
+<div class="mb-3 d-flex align-items-center">
+    <a href="/Cart/Index" class="me-2 text-dark"><i class="bi bi-arrow-left"></i></a>
+    <h4 class="m-0">Thanh toán</h4>
+</div>
+
+<form action="/Cart/Confirm" method="get">
+    <div class="row">
+        <div class="col-md-6">
+            <h6 class="fw-bold mb-3">Thông tin người nhận</h6>
+
+            <div class="mb-3 position-relative">
+                <i class="bi bi-person input-icon" style="position:absolute; left:12px; top:12px;"></i>
+                <input type="text" name="fullname" class="form-control" placeholder="Nhập họ và tên của bạn" style="padding-left:45px;" required>
+            </div>
+
+            <div class="mb-3 position-relative">
+                <i class="bi bi-telephone input-icon" style="position:absolute; left:12px; top:12px;"></i>
+                <input type="text" name="phone" class="form-control" placeholder="Nhập số điện thoại của bạn" style="padding-left:45px;" required>
+            </div>
+
+            <div class="mb-3 position-relative">
+                <i class="bi bi-geo-alt input-icon" style="position:absolute; left:12px; top:12px;"></i>
+                <input type="text" name="address" class="form-control" placeholder="Nhập địa chỉ giao hàng của bạn" style="padding-left:45px;" required>
+            </div>
+
+            <div class="mb-3 position-relative">
+                <i class="bi bi-envelope input-icon" style="position:absolute; left:12px; top:12px;"></i>
+                <input type="email" name="email" class="form-control" placeholder="Nhập email của bạn" style="padding-left:45px;" required>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h6 class="fw-bold mb-3">Phương thức thanh toán</h6>
+
+            <div class="card mb-3">
+                <div class="card-body d-flex align-items-center">
+                    <input class="form-check-input me-3" type="radio" name="payment" id="bank" checked>
+                    <div>
+                        <strong>Chuyển khoản ngân hàng</strong>
+                        <div class="text-muted small">Thanh toán qua tài khoản ngân hàng</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-body d-flex align-items-center">
+                    <input class="form-check-input me-3" type="radio" name="payment" id="cash">
+                    <div>
+                        <strong>Tiền mặt</strong>
+                        <div class="text-muted small">Thanh toán khi nhận hàng</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4 text-center">
+                <img src="https://via.placeholder.com/320x140?text=Payment+illustration" class="img-fluid rounded shadow-sm">
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2 fs-5 rounded"><i class="bi bi-lock-fill me-2"></i> Xác nhận thanh toán</button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,100 @@
+﻿@model List<TechStoreWeb.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Giỏ hàng";
+    var discount = ViewBag.Discount ?? 0m;
+}
+
+<h4 class="mb-4 text-techblue"><i class="bi bi-cart3"></i> Giỏ hàng</h4>
+
+<div class="row">
+    <div class="col-md-8 bg-white p-4 rounded shadow-sm">
+        <table class="table align-middle" id="cartTable">
+            <thead>
+                <tr class="text-muted">
+                    <th style="width:40px"></th>
+                    <th>Sản phẩm</th>
+                    <th style="width:110px">Giá</th>
+                    <th style="width:160px">Số lượng</th>
+                    <th style="width:120px">Thành tiền</th>
+                    <th style="width:40px"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model == null || !Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Giỏ hàng đang trống. Hãy thêm sản phẩm từ trang chủ.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <form asp-controller="Cart" asp-action="ToggleSelect" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <input type="hidden" name="selected" class="selected-input" value="@item.Selected.ToString().ToLower()" />
+                                    <input type="checkbox" class="form-check-input" @(item.Selected? "checked":"") onchange="this.form.querySelector('.selected-input').value=this.checked; this.form.submit();" />
+                                </form>
+                            </td>
+                            <td><img src="@item.Img" class="me-2" style="width:56px; height:56px; object-fit:cover;"> @item.Name</td>
+                            <td class="text-muted">@item.Price.ToString("N0")đ</td>
+                            <td>
+                                <form asp-controller="Cart" asp-action="UpdateQty" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <input type="hidden" name="qty" value="@(item.Qty - 1)" />
+                                    <button type="submit" class="btn btn-sm btn-light border" @(item.Qty <= 1 ? "disabled" : "")>-</button>
+                                </form>
+                                <span class="mx-2 qty">@item.Qty</span>
+                                <form asp-controller="Cart" asp-action="UpdateQty" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <input type="hidden" name="qty" value="@(item.Qty + 1)" />
+                                    <button type="submit" class="btn btn-sm btn-light border">+</button>
+                                </form>
+                            </td>
+                            <td class="text-primary">@( (item.Price * item.Qty).ToString("N0") )đ</td>
+                            <td>
+                                <form asp-controller="Cart" asp-action="Remove" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn btn-link text-danger p-0"><i class="bi bi-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+        <div class="voucher-box mt-3">
+            <form asp-controller="Cart" asp-action="ApplyVoucher" method="post" class="d-flex justify-content-center align-items-center">
+                @Html.AntiForgeryToken()
+                <input type="text" name="code" class="form-control w-50 me-2" placeholder="Nhập mã giảm giá">
+                <button type="submit" class="btn btn-secondary">Áp dụng</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="bg-white p-4 rounded shadow-sm">
+            <h6 class="fw-bold mb-4">Thông tin đơn hàng</h6>
+            @{
+                var subtotal = Model?.Where(i=>i.Selected).Sum(i=>i.Price * i.Qty) ?? 0m;
+                var shipping = 20000m;
+                var total = Math.Max(subtotal + shipping - (discount ?? 0m), 0m);
+            }
+            <div class="d-flex justify-content-between mb-2"><span class="text-muted">Tạm tính</span><span>@subtotal.ToString("N0")đ</span></div>
+            <div class="d-flex justify-content-between mb-2"><span class="text-muted">Mã giảm giá</span><span>@((discount>0)? $"- {discount.ToString("N0")}đ" : "0đ")</span></div>
+            <div class="d-flex justify-content-between mb-2"><span class="text-muted">Khuyến mại</span><span>0đ</span></div>
+            <div class="d-flex justify-content-between mb-2"><span class="text-muted">Phí vận chuyển</span><span>@shipping.ToString("N0")đ</span></div>
+            <hr>
+            <div class="d-flex justify-content-between fw-bold mb-4"><span>Tổng tiền thanh toán</span><span class="text-danger">@total.ToString("N0")đ</span></div>
+            <a href="/Cart/Checkout" id="checkoutBtn" class="btn btn-primary w-100">Tiến hành thanh toán</a>
+        </div>
+    </div>
+</div>
