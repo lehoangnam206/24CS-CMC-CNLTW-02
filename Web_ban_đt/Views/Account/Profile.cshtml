@@ -1,0 +1,296 @@
+@model TechStoreWeb.Models.User
+@{
+    ViewData["Title"] = "Thông tin cá nhân";
+}
+
+@section Styles {
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .account-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 32px;
+            align-items: flex-start;
+        }
+
+        /* Sidebar Navigation */
+        .account-sidebar {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+            padding: 20px 16px;
+            border: 1px solid rgba(0,0,0,0.02);
+            position: sticky;
+            top: 100px;
+        }
+
+        .account-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            color: #64748b;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            margin-bottom: 8px;
+        }
+
+        .account-nav-item i {
+            font-size: 20px;
+            transition: transform 0.2s;
+        }
+
+        .account-nav-item:hover {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .account-nav-item:hover i {
+            transform: scale(1.1);
+        }
+
+        .account-nav-item.active {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .account-nav-item.danger {
+            color: #ef4444;
+            margin-top: 20px;
+            border-top: 1px solid #f1f5f9;
+            border-radius: 0 0 12px 12px;
+            padding-top: 24px;
+        }
+
+        .account-nav-item.danger:hover {
+            background: transparent;
+            color: #dc2626;
+            text-decoration: underline;
+        }
+
+        /* Main Content */
+        .account-content {
+            background: transparent;
+        }
+
+        .page-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border: 1px solid #f1f5f9;
+            padding: 32px;
+        }
+
+        .alert-success-custom {
+            background: #dcfce7;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .form-control-custom {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            color: #0f172a;
+            background: #f8fafc;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .form-control-custom:focus {
+            background: #ffffff;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-control-custom:disabled {
+            background: #f1f5f9;
+            color: #64748b;
+            cursor: not-allowed;
+            border-color: #e2e8f0;
+        }
+
+        .help-text {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .btn-save {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            font-family: inherit;
+            margin-top: 8px;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Responsive */
+        @@media (max-width: 900px) {
+            .account-container {
+                grid-template-columns: 1fr;
+            }
+            .account-sidebar {
+                position: static;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                padding: 12px;
+            }
+            .account-nav-item {
+                margin: 0;
+                flex: 1;
+                justify-content: center;
+                min-width: 140px;
+                padding: 10px;
+            }
+            .account-nav-item.danger {
+                margin: 0;
+                border: none;
+                padding: 10px;
+                border-radius: 12px;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+}
+
+<div class="account-container">
+    <!-- Sidebar -->
+    <div class="account-sidebar">
+        <a href="/Account/Profile" class="account-nav-item active">
+            <i class="bi bi-person-circle"></i> Thông tin cá nhân
+        </a>
+        <a href="/Account/Orders" class="account-nav-item">
+            <i class="bi bi-box-seam-fill"></i> Đơn hàng của tôi
+        </a>
+        <a href="/Account/Logout" class="account-nav-item danger">
+            <i class="bi bi-box-arrow-right"></i> Đăng xuất
+        </a>
+    </div>
+
+    <!-- Content -->
+    <div class="account-content">
+        <h2 class="page-title"><i class="bi bi-person-lines-fill text-primary"></i> Chỉnh sửa hồ sơ</h2>
+        
+        <div class="profile-card">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert-success-custom">
+                    <i class="bi bi-check-circle-fill fs-5"></i>
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+
+            <form asp-action="Profile" method="post">
+                <input type="hidden" asp-for="Username" />
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Tên đăng nhập</label>
+                        <div style="position: relative;">
+                            <i class="bi bi-lock-fill" style="position: absolute; left: 16px; top: 16px; color: #94a3b8;"></i>
+                            <input type="text" class="form-control-custom" value="@Model.Username" disabled style="padding-left: 44px;" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Họ và tên</label>
+                        <input asp-for="FullName" class="form-control-custom" required placeholder="Nhập họ và tên..." />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Địa chỉ Email</label>
+                        <input asp-for="Email" type="email" class="form-control-custom" required placeholder="Nhập email của bạn..." />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Số điện thoại</label>
+                        <input asp-for="PhoneNumber" class="form-control-custom" required placeholder="Nhập số điện thoại..." />
+                    </div>
+
+                    <div class="form-group full-width" style="margin-top: 12px; padding-top: 24px; border-top: 1px dashed #e2e8f0;">
+                        <label class="form-label">Đổi mật khẩu (Tuỳ chọn)</label>
+                        <input asp-for="Password" type="password" class="form-control-custom" value="" placeholder="Nhập mật khẩu mới nếu muốn thay đổi..." />
+                        <span class="help-text"><i class="bi bi-info-circle"></i> Bỏ trống ô này nếu bạn muốn giữ nguyên mật khẩu hiện tại.</span>
+                    </div>
+                </div>
+
+                <div style="text-align: right; margin-top: 32px;">
+                    <button type="submit" class="btn-save">
+                        <i class="bi bi-cloud-arrow-up-fill"></i> Lưu thay đổi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+@model IEnumerable<TechStoreWeb.Models.Product>
+@{
+    ViewData["Title"] = "Quản lý Sản phẩm";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="mb-1 text-techblue fw-bold">Danh sách Sản phẩm</h3>
+        <p class="text-muted mb-0">Quản lý kho hàng và thông tin sản phẩm</p>
+    </div>
+    <a asp-action="Create" class="btn text-white" style="background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%); border-radius: 10px; padding: 10px 20px; font-weight: 500; box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3); transition: all 0.3s ease;">
+        <i class="bi bi-plus-lg me-1"></i> Thêm mới sản phẩm
+    </a>
+</div>
+
+<div class="card shadow-sm border-0" style="border-radius: 16px; overflow: hidden;">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead style="background-color: #f8fafc;">
+                    <tr>
+                        <th class="border-0 px-4 py-3 text-muted fw-semibold">Hình ảnh</th>
+                        <th class="border-0 px-4 py-3 text-muted fw-semibold">Tên sản phẩm</th>
+                        <th class="border-0 px-4 py-3 text-muted fw-semibold">Danh mục</th>
+                        <th class="border-0 px-4 py-3 text-muted fw-semibold">Giá (VNĐ)</th>
+                        <th class="border-0 px-4 py-3 text-muted fw-semibold text-end">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model) {
+                        <tr style="transition: background-color 0.2s;">
+                            <td class="px-4 py-3 border-bottom-0" style="border-bottom: 1px solid #f1f5f9 !important;">
+                                <img src="@item.ImageUrl" alt="@item.Name" style="width: 56px; height: 56px; object-fit: contain; border-radius: 8px; background: #fff; border: 1px solid #e2e8f0; padding: 4px;" />
+                            </td>
+                            <td class="px-4 py-3 border-bottom-0 fw-medium" style="border-bottom: 1px solid #f1f5f9 !important; color: #1e293b;">@item.Name</td>
+                            <td class="px-4 py-3 border-bottom-0" style="border-bottom: 1px solid #f1f5f9 !important;">
+                                <span class="badge" style="background: #eff6ff; color: #2563eb; font-weight: 500; padding: 6px 12px; border-radius: 20px;">@item.Category.CategoryName</span>
+                            </td>
+                            <td class="px-4 py-3 border-bottom-0 text-danger fw-bold" style="border-bottom: 1px solid #f1f5f9 !important;">@item.Price.ToString("N0")</td>
+                            <td class="px-4 py-3 border-bottom-0 text-end" style="border-bottom: 1px solid #f1f5f9 !important;">
+                                <div class="btn-group shadow-sm" role="group" style="border-radius: 8px;">
+                                    <a asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-sm btn-light text-primary" style="border-color: #e2e8f0; background: white;" title="Sửa">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                    <form asp-action="Delete" asp-route-id="@item.ProductId" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
+                                        <button type="submit" class="btn btn-sm btn-light text-danger" style="border-color: #e2e8f0; border-left: none; background: white; border-top-left-radius: 0; border-bottom-left-radius: 0;" title="Xóa">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-light:hover {
+        background-color: #f8fafc !important;
+        transform: translateY(-1px);
+    }
+</style>

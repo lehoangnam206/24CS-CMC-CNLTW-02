@@ -1,0 +1,85 @@
+@model TechStoreWeb.Models.Promotion
+
+@{
+    ViewData["Title"] = "Sửa chương trình khuyến mại";
+}
+
+<div class="mb-4 d-flex align-items-center">
+    <a href="/Admin/Promotions" class="text-decoration-none text-muted me-3 fs-5"><i class="bi bi-arrow-left"></i></a>
+    <h2 class="mb-0">@ViewData["Title"]</h2>
+</div>
+
+<form method="post" action="/Admin/Promotions/Edit/@Model.Id">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-3">Thông tin chung</h5>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-semibold">Tên chương trình</label>
+                        <input asp-for="Name" class="form-control" placeholder="Ví dụ: Mừng Tết đến" required />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="StartDate" class="form-label fw-semibold">Từ ngày</label>
+                            <input asp-for="StartDate" type="datetime-local" class="form-control" required />
+                            <span asp-validation-for="StartDate" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="EndDate" class="form-label fw-semibold">Đến ngày</label>
+                            <input asp-for="EndDate" type="datetime-local" class="form-control" required />
+                            <span asp-validation-for="EndDate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 form-check form-switch">
+                        <input asp-for="IsActive" class="form-check-input" type="checkbox" id="isActiveSwitch">
+                        <label class="form-check-label fw-semibold" for="isActiveSwitch">Kích hoạt chương trình</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-3">Hình thức khuyến mại</h5>
+                    
+                    <div class="mb-3">
+                        <label asp-for="DiscountPercentage" class="form-label fw-semibold">Giảm giá theo % (Không thể thay đổi)</label>
+                        <div class="input-group">
+                            <input asp-for="DiscountPercentage" type="number" class="form-control" readonly />
+                            <span class="input-group-text bg-light">%</span>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning mb-0">
+                        <i class="bi bi-exclamation-triangle"></i> Bạn chỉ có thể sửa thông tin chung. Để thay đổi mức giảm hoặc áp dụng cho sản phẩm khác, vui lòng <strong>Kết thúc</strong> chương trình này và tạo chương trình mới.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 bg-light">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">Hoàn tất</h5>
+                    <p class="text-muted small">Cập nhật thông tin chương trình khuyến mại.</p>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary bg-techblue border-0 py-2 fw-bold">
+                            <i class="bi bi-save me-1"></i> Lưu thay đổi
+                        </button>
+                        <a href="/Admin/Promotions" class="btn btn-outline-secondary py-2">
+                            Bỏ qua
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

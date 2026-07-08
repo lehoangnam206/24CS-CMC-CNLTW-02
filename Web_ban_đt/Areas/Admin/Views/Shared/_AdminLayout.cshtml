@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin TechStore</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Loại bỏ nền xanh của Chrome Autofill cho tất cả ô nhập liệu */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active {
+            transition: background-color 50000s ease-in-out 0s;
+            -webkit-text-fill-color: #212529 !important;
+        }
+        
+        /* Bỏ viền xanh (focus ring) mặc định của Bootstrap */
+        .form-control:focus, .form-select:focus, .form-check-input:focus, .btn:focus {
+            box-shadow: none !important;
+            border-color: #ced4da;
+        }
+
+        /* Tech blue */
+        .bg-techblue {
+            background-color: #1a56db !important;
+        }
+
+        .text-techblue {
+            color: #1a56db;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            min-height: 100vh;
+            border-right: 1px solid #e5e7eb;
+            transition: all 0.3s;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .sidebar .brand {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #fff;
+            background-color: #1a56db;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-menu li a {
+            display: block;
+            padding: 15px 20px;
+            color: #4b5563;
+            text-decoration: none;
+            border-bottom: 1px solid #f1f5f9;
+            transition: 0.2s;
+        }
+
+        .sidebar-menu li a:hover, .sidebar-menu li a.active {
+            background: #f8fafc;
+            color: #1a56db;
+            border-left: 4px solid #1a56db;
+        }
+
+        .sidebar-menu li a i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            transition: all 0.3s;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            height: 60px;
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .content-area {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .sidebar {
+                margin-left: -250px;
+            }
+            .sidebar.active {
+                margin-left: 0;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+<style>* { font-family: 'Times New Roman', Times, serif !important; }</style></head>
+<body>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="brand">
+            <i class="bi bi-box-fill me-2"></i> Admin Panel
+        </div>
+        <ul class="sidebar-menu mt-3">
+            <li><a href="/Admin/Reports" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Reports" ? "active" : "")"><i class="bi bi-graph-up"></i> Báo cáo thống kê</a></li>
+            <li><a href="/Admin/Products" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Products" ? "active" : "")"><i class="bi bi-phone"></i> Quản lý Sản phẩm</a></li>
+            <li><a href="/Admin/Categories" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Categories" ? "active" : "")"><i class="bi bi-folder2-open"></i> Quản lý Danh mục</a></li>
+            <li><a href="/Admin/Orders" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Orders" ? "active" : "")"><i class="bi bi-box-seam"></i> Quản lý Đơn hàng</a></li>
+            <li><a href="/Admin/Users" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Users" ? "active" : "")"><i class="bi bi-people"></i> Quản lý Người dùng</a></li>
+            <li><a href="/Admin/Promotions" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Promotions" ? "active" : "")"><i class="bi bi-tags"></i> Khuyến mại</a></li>
+            <li><a href="/Admin/Reviews" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Reviews" ? "active" : "")"><i class="bi bi-chat-left-text"></i> Đánh giá sản phẩm</a></li>
+            <li><a href="/" target="_blank"><i class="bi bi-box-arrow-up-right"></i> Xem trang chủ</a></li>
+            <li><a href="/Account/Logout" class="text-danger"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="topbar shadow-sm">
+            <div>
+                <button class="btn btn-light d-md-none" id="sidebarToggle"><i class="bi bi-list fs-4"></i></button>
+            </div>
+            <div class="d-flex align-items-center">
+                <span class="me-3 fw-bold">Xin chào, Quản trị viên</span>
+                <i class="bi bi-person-circle fs-3 text-techblue"></i>
+            </div>
+        </div>
+
+        <div class="content-area">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            @RenderBody()
+        </div>
+
+        <footer class="mt-auto py-3 text-center bg-white border-top">
+            <span class="text-muted text-sm">&copy; 2026 - TechStore Admin</span>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('sidebarToggle')?.addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

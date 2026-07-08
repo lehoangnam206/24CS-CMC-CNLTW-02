@@ -1,0 +1,72 @@
+@model IEnumerable<TechStoreWeb.Models.Category>
+@{
+    ViewData["Title"] = "Quản lý Danh mục";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="mb-1 text-techblue fw-bold">Danh sách Danh mục</h3>
+        <p class="text-muted mb-0">Quản lý các danh mục sản phẩm</p>
+    </div>
+    <a asp-action="Create" class="btn text-white" style="background: linear-gradient(135deg, #118ab2 0%, #06d6a0 100%); border-radius: 10px; padding: 10px 20px; font-weight: 500; box-shadow: 0 4px 12px rgba(6, 214, 160, 0.3); transition: all 0.3s ease;">
+        <i class="bi bi-plus-circle-fill me-1"></i> Thêm danh mục
+    </a>
+</div>
+
+<div class="card shadow-sm border-0" style="border-radius: 16px; overflow: hidden;">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead style="background-color: #f8fafc;">
+                    <tr>
+                        <th class="border-0 px-4 py-3 text-muted fw-semibold">ID</th>
+                        <th class="border-0 px-4 py-3 text-muted fw-semibold">Tên danh mục</th>
+                        <th class="border-0 px-4 py-3 text-muted fw-semibold text-center">Số lượng SP</th>
+                        <th class="border-0 px-4 py-3 text-muted fw-semibold text-end">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model) {
+                        <tr style="transition: background-color 0.2s;">
+                            <td class="px-4 py-3 border-bottom-0 text-muted" style="border-bottom: 1px solid #f1f5f9 !important;">#@item.CategoryId</td>
+                            <td class="px-4 py-3 border-bottom-0 fw-bold" style="border-bottom: 1px solid #f1f5f9 !important; color: #1e293b;">@item.CategoryName</td>
+                            <td class="px-4 py-3 border-bottom-0 text-center" style="border-bottom: 1px solid #f1f5f9 !important;">
+                                <span class="badge" style="background: #eff6ff; color: #2563eb; padding: 6px 12px; border-radius: 20px;">
+                                    @(item.Products?.Count ?? 0)
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 border-bottom-0 text-end" style="border-bottom: 1px solid #f1f5f9 !important;">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a asp-action="Edit" asp-route-id="@item.CategoryId" class="btn btn-sm text-primary" style="background: #eff6ff; border-radius: 8px;" title="Sửa">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                    <form asp-action="Delete" asp-route-id="@item.CategoryId" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm text-danger" style="background: #fef2f2; border-radius: 8px;" title="Xóa" onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center py-5 text-muted">
+                                <i class="bi bi-folder2-open" style="font-size: 3rem;"></i>
+                                <p class="mt-3 mb-0">Chưa có danh mục nào.</p>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-sm:hover {
+        filter: brightness(0.95);
+        transform: translateY(-1px);
+    }
+</style>

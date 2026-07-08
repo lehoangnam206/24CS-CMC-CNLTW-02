@@ -1,0 +1,177 @@
+@model IEnumerable<TechStoreWeb.Models.Review>
+@{
+    ViewData["Title"] = "Quản lý Đánh giá";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    int totalReviews = (int)(ViewBag.TotalReviews ?? 0);
+    double avgRating = (double)(ViewBag.AvgRating ?? 0.0);
+    int count5 = (int)(ViewBag.Count5 ?? 0);
+    int count4 = (int)(ViewBag.Count4 ?? 0);
+    int count3 = (int)(ViewBag.Count3 ?? 0);
+    int count2 = (int)(ViewBag.Count2 ?? 0);
+    int count1 = (int)(ViewBag.Count1 ?? 0);
+
+    var filterProduct = ViewBag.FilterProduct as TechStoreWeb.Models.Product;
+    int? filterRating = ViewBag.FilterRating as int?;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold mb-0"><i class="bi bi-chat-left-text me-2 text-techblue"></i>Quản lý Đánh giá Sản phẩm</h3>
+</div>
+
+<!-- Stats Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="fs-1 fw-bold text-warning">@avgRating.ToString("0.0")</div>
+                <div class="text-warning mb-1">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        if (i <= Math.Round(avgRating))
+                        {
+                            <i class="bi bi-star-fill"></i>
+                        }
+                        else
+                        {
+                            <i class="bi bi-star"></i>
+                        }
+                    }
+                </div>
+                <div class="text-muted">Trung bình (@totalReviews đánh giá)</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="row text-center">
+                    @{
+                        var starData = new[] {
+                            new { Stars = 5, Count = count5, Color = "#22c55e" },
+                            new { Stars = 4, Count = count4, Color = "#84cc16" },
+                            new { Stars = 3, Count = count3, Color = "#eab308" },
+                            new { Stars = 2, Count = count2, Color = "#f97316" },
+                            new { Stars = 1, Count = count1, Color = "#ef4444" }
+                        };
+                    }
+                    @foreach (var s in starData)
+                    {
+                        double pct = totalReviews > 0 ? (s.Count * 100.0 / totalReviews) : 0;
+                        <div class="col">
+                            <a href="/Admin/Reviews?rating=@s.Stars" class="text-decoration-none">
+                                <div class="fw-bold fs-4" style="color: @s.Color;">@s.Count</div>
+                                <div>
+                                    @for (int i = 0; i < s.Stars; i++)
+                                    {
+                                        <i class="bi bi-star-fill text-warning" style="font-size: 11px;"></i>
+                                    }
+                                </div>
+                                <div class="text-muted" style="font-size: 12px;">@pct.ToString("0")%</div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Active Filters -->
+@if (filterProduct != null || filterRating.HasValue)
+{
+    <div class="alert alert-info d-flex align-items-center gap-2 mb-3">
+        <i class="bi bi-funnel"></i>
+        <span>Đang lọc:</span>
+        @if (filterProduct != null)
+        {
+            <span class="badge bg-primary">Sản phẩm: @filterProduct.Name</span>
+        }
+        @if (filterRating.HasValue)
+        {
+            <span class="badge bg-warning text-dark">@filterRating sao</span>
+        }
+        <a href="/Admin/Reviews" class="btn btn-sm btn-outline-secondary ms-auto"><i class="bi bi-x-lg"></i> Xóa bộ lọc</a>
+    </div>
+}
+
+<!-- Reviews Table -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>Sản phẩm</th>
+                        <th>Người đánh giá</th>
+                        <th style="width: 130px;">Đánh giá</th>
+                        <th>Nội dung</th>
+                        <th style="width: 140px;">Thời gian</th>
+                        <th style="width: 80px;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        int stt = 1;
+                        foreach (var review in Model)
+                        {
+                            <tr>
+                                <td class="text-muted">@stt</td>
+                                <td>
+                                    <a href="/Admin/Reviews?productId=@review.ProductId" class="text-decoration-none fw-semibold">
+                                        @review.Product.Name
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="fw-semibold">@review.User.FullName</div>
+                                    <div class="text-muted" style="font-size: 12px;">@review.User.Username</div>
+                                </td>
+                                <td>
+                                    <span class="text-warning">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= review.Rating)
+                                            {
+                                                <i class="bi bi-star-fill"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="bi bi-star"></i>
+                                            }
+                                        }
+                                    </span>
+                                </td>
+                                <td style="max-width: 300px;">
+                                    <div style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                        @review.Comment
+                                    </div>
+                                </td>
+                                <td class="text-muted" style="font-size: 13px;">@review.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>
+                                    <form asp-action="Delete" asp-route-id="@review.ReviewId" method="post" style="display: inline;" onsubmit="return confirm('Bạn có chắc muốn xóa đánh giá này?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa đánh giá">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            stt++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-muted">
+                                <i class="bi bi-chat-left-text fs-1 d-block mb-2 opacity-25"></i>
+                                Chưa có đánh giá nào.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

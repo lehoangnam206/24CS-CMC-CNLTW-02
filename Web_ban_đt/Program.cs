@@ -22,6 +22,27 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var app = builder.Build();
 
+// Seed database and copy image files
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<AppDbContext>();
+        var env = services.GetRequiredService<IWebHostEnvironment>();
+
+        // Ensure database is created
+        context.Database.EnsureCreated();
+
+        TechStoreWeb.Data.DbInitializer.Initialize(context, env);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred seeding the DB.");
+    }
+}
+
 // 3. Cấu hình HTTP request pipeline (Luồng xử lý request)
 if (!app.Environment.IsDevelopment())
 {
@@ -41,6 +62,10 @@ app.UseSession();
 app.UseAuthorization();
 
 // 4. Cấu hình Route mặc định (Trang chủ sẽ trỏ thẳng vào HomeController và action Index)
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

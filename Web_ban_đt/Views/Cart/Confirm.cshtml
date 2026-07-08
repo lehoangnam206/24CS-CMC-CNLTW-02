@@ -1,20 +1,199 @@
-﻿@{
-    ViewData["Title"] = "Xác nhận QR";
+@model TechStoreWeb.Models.Order
+@{
+    Layout = null;
 }
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đặt hàng thành công - TechStore</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        body {
+            background-color: #f8fafc;
+            background-image: radial-gradient(at 50% 0%, hsla(160, 100%, 70%, 0.1) 0px, transparent 50%);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: #0f172a;
+        }
 
-<div class="d-flex justify-content-center align-items-center mt-5">
-    <div class="text-center bg-white p-5 rounded shadow-sm" style="width: 400px;">
-        <div class="mb-3 text-danger fw-bold d-flex align-items-center justify-content-center">
-            <i class="bi bi-star-fill me-2"></i>
-            <div class="text-start" style="font-size: 12px; line-height: 1.2;">
-                NGUYEN DUC BINH<br><span class="text-dark">0812285479</span>
+        .success-container {
+            width: 100%;
+            max-width: 540px;
+            background-color: #ffffff;
+            border-radius: 24px;
+            padding: 48px 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
+            margin: 20px;
+            border: 1px solid rgba(255,255,255,0.8);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .success-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 6px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .success-icon {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 44px;
+            margin: 0 auto 30px auto;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+            animation: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        @@keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            margin: 0 0 12px 0;
+            color: #1e293b;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 16px;
+            margin: 0 0 32px 0;
+            line-height: 1.6;
+        }
+
+        .order-details {
+            background-color: #f8fafc;
+            border-radius: 16px;
+            padding: 24px 30px;
+            text-align: left;
+            margin-bottom: 32px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .order-details h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 20px 0;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            font-size: 15px;
+        }
+        .detail-row:last-child { margin-bottom: 0; }
+
+        .detail-label { color: #64748b; font-weight: 500; }
+        .detail-value { font-weight: 600; color: #1e293b; }
+        .detail-value.total { color: #ef4444; font-weight: 800; font-size: 20px; font-family: 'Outfit', sans-serif;}
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.25);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(67, 97, 238, 0.35);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #4361ee;
+            border: 1px solid #cbd5e1;
+        }
+        .btn-secondary:hover {
+            background-color: #f8fafc;
+            border-color: #94a3b8;
+        }
+    </style>
+<style>* { font-family: 'Times New Roman', Times, serif !important; }</style></head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">
+            <i class="bi bi-check-lg"></i>
+        </div>
+        
+        <h2>Cảm ơn bạn đã đặt hàng!</h2>
+        <p class="subtitle">Đơn hàng <strong>#@Model.OrderId</strong> của bạn đã được ghi nhận. Chúng tôi sẽ liên hệ lại với bạn trong thời gian sớm nhất.</p>
+        
+        <div class="order-details">
+            <h3><i class="bi bi-receipt text-primary"></i> Tóm tắt đơn hàng</h3>
+            <div class="detail-row">
+                <span class="detail-label">Mã đơn hàng:</span>
+                <span class="detail-value">#@Model.OrderId</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Ngày đặt:</span>
+                <span class="detail-value">@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Thanh toán:</span>
+                <span class="detail-value">
+                    @if(Model.PaymentMethod == "VNPAY") { <span class="badge bg-primary text-white px-2 py-1 rounded">Chuyển khoản QR</span> }
+                    else { <span class="badge bg-success text-white px-2 py-1 rounded">Tiền mặt (COD)</span> }
+                </span>
+            </div>
+            <div class="detail-row" style="margin-top: 20px; padding-top: 20px; border-top: 2px dashed #e2e8f0;">
+                <span class="detail-label" style="font-weight: 700; color: #1e293b; font-size: 16px;">Tổng thanh toán:</span>
+                <span class="detail-value total">@Model.TotalAmount.ToString("N0") đ</span>
             </div>
         </div>
-        <img src="https://via.placeholder.com/200x200?text=QR+CODE" class="img-fluid mb-4 border border-2 p-2">
-        <div class="d-flex justify-content-between mb-4 px-4 fw-bold">
-            <span class="text-danger">VIETQR</span>
-            <span class="text-primary">napas 247</span>
+
+        <div class="action-buttons">
+            <a href="/" class="btn btn-primary"><i class="bi bi-shop"></i> Tiếp tục mua sắm</a>
+            <a href="/Account/Orders" class="btn btn-secondary"><i class="bi bi-list-check"></i> Theo dõi đơn hàng</a>
         </div>
-        <a href="/Home/Index" class="btn btn-primary w-100 fs-5 py-2">Hoàn Tất Thanh Toán</a>
     </div>
-</div>
+</body>
+</html>

@@ -1,66 +1,383 @@
-﻿@{
-    ViewData["Title"] = "Thanh toán";
+@model List<TechStoreWeb.Models.CartItem>
+@{
+    Layout = null;
+    var user = ViewBag.User as TechStoreWeb.Models.User;
+    var discount = ViewBag.Discount ?? 0m;
 }
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thanh toán - TechStore</title>
+    
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        body {
+            background-color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #0f172a;
+            -webkit-font-smoothing: antialiased;
+        }
 
-<div class="mb-3 d-flex align-items-center">
-    <a href="/Cart/Index" class="me-2 text-dark"><i class="bi bi-arrow-left"></i></a>
-    <h4 class="m-0">Thanh toán</h4>
-</div>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-<form action="/Cart/Confirm" method="get">
-    <div class="row">
-        <div class="col-md-6">
-            <h6 class="fw-bold mb-3">Thông tin người nhận</h6>
+        .checkout-wrapper {
+            width: 100%;
+            max-width: 1000px;
+            margin: 40px auto 80px auto;
+            padding: 0 20px;
+        }
+        
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .back-btn {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+            background: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #1e293b;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+        .back-btn:hover {
+            color: #4361ee;
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 0 6px 16px rgba(67, 97, 238, 0.15);
+        }
+        
+        .header-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            letter-spacing: -0.5px;
+        }
+        
+        .header-subtitle {
+            color: #64748b;
+            font-size: 16px;
+        }
+        
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 40px;
+        }
 
-            <div class="mb-3 position-relative">
-                <i class="bi bi-person input-icon" style="position:absolute; left:12px; top:12px;"></i>
-                <input type="text" name="fullname" class="form-control" placeholder="Nhập họ và tên của bạn" style="padding-left:45px;" required>
+        .checkout-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+        
+        .section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 24px;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        .input-group-custom {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .input-group-custom i {
+            position: absolute;
+            left: 16px;
+            color: #94a3b8;
+            font-size: 20px;
+            transition: color 0.3s;
+        }
+        .input-group-custom input {
+            width: 100%;
+            padding: 16px 16px 16px 52px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            color: #0f172a;
+            background: #f8fafc;
+            outline: none;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        .input-group-custom input:focus {
+            background: #ffffff;
+            border-color: #4361ee;
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+        }
+        .input-group-custom:focus-within i {
+            color: #4361ee;
+        }
+        .input-group-custom input[readonly] {
+            background-color: #f1f5f9;
+            color: #64748b;
+        }
+        
+        .payment-radio { display: none; }
+        .payment-method {
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 24px 20px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            transition: all 0.3s;
+            background: #f8fafc;
+        }
+        .payment-method:hover {
+            background: #ffffff;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+        
+        .radio-circle {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #cbd5e1;
+            border-radius: 50%;
+            margin-top: 2px;
+            position: relative;
+            display: inline-block;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+        
+        .payment-radio:checked + .payment-method {
+            border-color: #4361ee;
+            background: #ffffff;
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.08);
+        }
+        .payment-radio:checked + .payment-method .radio-circle {
+            border-color: #4361ee;
+        }
+        .payment-radio:checked + .payment-method .radio-circle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            background: #4361ee;
+            border-radius: 50%;
+        }
+        
+        .payment-info { flex: 1; }
+        .payment-title {
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .payment-title i { font-size: 24px; }
+        .payment-desc {
+            color: #64748b;
+            font-size: 14px;
+            margin-left: 36px;
+        }
+        
+        .security-badge {
+            margin-top: 32px;
+            padding: 20px;
+            background: #f0fdf4;
+            border-radius: 16px;
+            border: 1px dashed #bbf7d0;
+            text-align: center;
+            color: #15803d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            color: #fff;
+            border: none;
+            width: 100%;
+            padding: 20px;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 40px;
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.3);
+            font-family: inherit;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(67, 97, 238, 0.4);
+        }
+        
+        @@media (max-width: 768px) {
+            .checkout-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .back-btn {
+                position: relative;
+                top: 0;
+                transform: none;
+                margin-bottom: 20px;
+                display: inline-flex;
+            }
+        }
+    </style>
+<style>* { font-family: 'Times New Roman', Times, serif !important; }</style></head>
+<body>
+    <div class="checkout-wrapper">
+        <div class="header-section">
+            <a href="/Cart/Index" class="back-btn"><i class="bi bi-chevron-left"></i></a>
+            <div class="header-title">
+                <i class="bi bi-credit-card-2-front text-primary"></i>
+                Thanh toán
             </div>
-
-            <div class="mb-3 position-relative">
-                <i class="bi bi-telephone input-icon" style="position:absolute; left:12px; top:12px;"></i>
-                <input type="text" name="phone" class="form-control" placeholder="Nhập số điện thoại của bạn" style="padding-left:45px;" required>
-            </div>
-
-            <div class="mb-3 position-relative">
-                <i class="bi bi-geo-alt input-icon" style="position:absolute; left:12px; top:12px;"></i>
-                <input type="text" name="address" class="form-control" placeholder="Nhập địa chỉ giao hàng của bạn" style="padding-left:45px;" required>
-            </div>
-
-            <div class="mb-3 position-relative">
-                <i class="bi bi-envelope input-icon" style="position:absolute; left:12px; top:12px;"></i>
-                <input type="email" name="email" class="form-control" placeholder="Nhập email của bạn" style="padding-left:45px;" required>
-            </div>
+            <div class="header-subtitle">Vui lòng kiểm tra thông tin giao hàng thật kĩ trước khi thanh toán</div>
         </div>
 
-        <div class="col-md-6">
-            <h6 class="fw-bold mb-3">Phương thức thanh toán</h6>
-
-            <div class="card mb-3">
-                <div class="card-body d-flex align-items-center">
-                    <input class="form-check-input me-3" type="radio" name="payment" id="bank" checked>
-                    <div>
-                        <strong>Chuyển khoản ngân hàng</strong>
-                        <div class="text-muted small">Thanh toán qua tài khoản ngân hàng</div>
+        <form asp-action="Checkout" method="post" id="checkoutForm">
+            @Html.AntiForgeryToken()
+            
+            <div class="checkout-grid">
+                <!-- Left Column: Shipping Info -->
+                <div class="checkout-card">
+                    <h3 class="section-title"><i class="bi bi-geo-alt-fill text-primary"></i> Thông tin giao hàng</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Họ và tên</label>
+                        <div class="input-group-custom">
+                            <i class="bi bi-person"></i>
+                            <input type="text" value="@user?.FullName" readonly placeholder="Nhập họ và tên của bạn" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Số điện thoại</label>
+                        <div class="input-group-custom">
+                            <i class="bi bi-telephone"></i>
+                            <input type="text" value="@user?.PhoneNumber" readonly placeholder="Nhập số điện thoại của bạn" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Địa chỉ giao hàng</label>
+                        <div class="input-group-custom">
+                            <i class="bi bi-geo-alt"></i>
+                            <input type="text" name="shippingAddress" required placeholder="Nhập địa chỉ giao hàng của bạn chi tiết" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mb-0">
+                        <label class="form-label">Email</label>
+                        <div class="input-group-custom">
+                            <i class="bi bi-envelope"></i>
+                            <input type="email" value="@user?.Email" readonly placeholder="Nhập email của bạn" />
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="card mb-3">
-                <div class="card-body d-flex align-items-center">
-                    <input class="form-check-input me-3" type="radio" name="payment" id="cash">
-                    <div>
-                        <strong>Tiền mặt</strong>
-                        <div class="text-muted small">Thanh toán khi nhận hàng</div>
+                
+                <!-- Right Column: Payment Methods -->
+                <div class="checkout-card" style="background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);">
+                    <h3 class="section-title"><i class="bi bi-wallet-fill text-primary"></i> Phương thức thanh toán</h3>
+                    
+                    <div class="payment-method-wrapper">
+                        <input type="radio" name="paymentMethod" value="VNPAY" id="payVNPAY" class="payment-radio" checked>
+                        <label class="payment-method" for="payVNPAY">
+                            <div class="radio-circle"></div>
+                            <div class="payment-info">
+                                <div class="payment-title"><i class="bi bi-bank text-primary"></i> Chuyển khoản ngân hàng</div>
+                                <div class="payment-desc">Thanh toán nhanh chóng qua quét mã QR</div>
+                            </div>
+                        </label>
                     </div>
+                    
+                    <div class="payment-method-wrapper">
+                        <input type="radio" name="paymentMethod" value="COD" id="payCOD" class="payment-radio">
+                        <label class="payment-method" for="payCOD">
+                            <div class="radio-circle"></div>
+                            <div class="payment-info">
+                                <div class="payment-title"><i class="bi bi-cash-stack text-success"></i> Tiền mặt (COD)</div>
+                                <div class="payment-desc">Thanh toán khi nhận được hàng</div>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <div class="security-badge">
+                        <i class="bi bi-shield-check" style="font-size: 32px;"></i>
+                        <span style="font-weight: 600;">Giao dịch được bảo vệ an toàn với SSL</span>
+                    </div>
+
+                    @{
+                        var subtotal = Model?.Sum(i => i.Price * i.Qty) ?? 0m;
+                        var shipping = (subtotal > 0) ? 20000m : 0m;
+                        var total = Math.Max(subtotal + shipping - discount, 0m);
+                    }
+
+                    <button type="submit" class="submit-btn">
+                        Xác nhận đặt hàng &bull; @total.ToString("N0")đ
+                    </button>
                 </div>
             </div>
-
-            <div class="mb-4 text-center">
-                <img src="https://via.placeholder.com/320x140?text=Payment+illustration" class="img-fluid rounded shadow-sm">
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100 py-2 fs-5 rounded"><i class="bi bi-lock-fill me-2"></i> Xác nhận thanh toán</button>
-        </div>
+        </form>
     </div>
-</form>
+</body>
+</html>

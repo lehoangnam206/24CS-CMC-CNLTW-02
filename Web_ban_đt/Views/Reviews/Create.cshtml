@@ -1,0 +1,239 @@
+@model TechStoreWeb.Models.Review
+@{
+    ViewData["Title"] = "Đánh giá sản phẩm";
+    var product = ViewBag.Product as TechStoreWeb.Models.Product;
+}
+
+@section Styles {
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .review-wrapper {
+            max-width: 680px;
+            margin: 60px auto;
+            padding: 0 20px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .review-card {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.03);
+            padding: 40px 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .review-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .page-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 30px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .product-summary {
+            display: flex;
+            align-items: center;
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 32px;
+            border: 1px dashed #cbd5e1;
+            transition: all 0.3s ease;
+        }
+
+        .product-summary:hover {
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .product-summary img {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            object-fit: contain;
+            background: #ffffff;
+            border: 1px solid #f1f5f9;
+            padding: 8px;
+            margin-right: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+
+        .product-details {
+            flex: 1;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 6px;
+        }
+
+        .product-price {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #ef4444;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            font-size: 15px;
+            color: #475569;
+            margin-bottom: 10px;
+        }
+
+        .form-select-custom,
+        .form-control-custom {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            color: #0f172a;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .form-select-custom {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        .form-control-custom {
+            resize: vertical;
+            min-height: 140px;
+        }
+
+        .form-select-custom:focus,
+        .form-control-custom:focus {
+            background: #ffffff;
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+        }
+
+        .btn-submit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.25);
+            font-family: inherit;
+            margin-bottom: 16px;
+            margin-top: 32px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(245, 158, 11, 0.35);
+        }
+
+        .btn-cancel {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: #ffffff;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .btn-cancel:hover {
+            background: #f8fafc;
+            color: #0f172a;
+            border-color: #cbd5e1;
+        }
+
+        @@media (max-width: 768px) {
+            .review-card { padding: 30px 24px; }
+        }
+    </style>
+}
+
+<div class="review-wrapper">
+    <div class="review-card">
+        <h2 class="page-title"><i class="bi bi-star-fill text-warning"></i> Đánh giá sản phẩm</h2>
+        
+        @if (product != null)
+        {
+            <div class="product-summary">
+                <img src="@product.ImageUrl" alt="@product.Name" />
+                <div class="product-details">
+                    <div class="product-name">@product.Name</div>
+                    <div class="product-price">@product.Price.ToString("N0") đ</div>
+                </div>
+            </div>
+        }
+
+        <form asp-action="Create" method="post">
+            <input type="hidden" asp-for="ProductId" />
+            
+            <div class="form-group">
+                <label class="form-label">Bạn cảm thấy sản phẩm thế nào? (1-5 sao)</label>
+                <select asp-for="Rating" class="form-select-custom" required>
+                    <option value="" disabled selected>Chọn mức điểm đánh giá...</option>
+                    <option value="5">⭐⭐⭐⭐⭐ Tuyệt vời (5 Sao)</option>
+                    <option value="4">⭐⭐⭐⭐ Rất tốt (4 Sao)</option>
+                    <option value="3">⭐⭐⭐ Bình thường (3 Sao)</option>
+                    <option value="2">⭐⭐ Kém (2 Sao)</option>
+                    <option value="1">⭐ Quá tệ (1 Sao)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Chia sẻ thêm về trải nghiệm của bạn</label>
+                <textarea asp-for="Comment" class="form-control-custom" placeholder="Sản phẩm này có tốt không? Điểm nào bạn ưng ý nhất? Nhận xét của bạn sẽ giúp ích cho rất nhiều người mua khác..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <i class="bi bi-send-fill"></i> Gửi đánh giá
+            </button>
+            <a href="/Account/Orders" class="btn-cancel">Quay lại lịch sử đơn hàng</a>
+        </form>
+    </div>
+</div>
