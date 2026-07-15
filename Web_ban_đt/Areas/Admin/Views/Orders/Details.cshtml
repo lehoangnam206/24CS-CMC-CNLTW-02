@@ -82,17 +82,25 @@
                     
                     <div class="mb-3">
                         <label class="form-label">Trạng thái hiện tại:</label>
-                        <select name="status" class="form-select">
-                            <option value="Pending" selected="@(Model.Status == "Pending")">Chờ xử lý</option>
-                            <option value="WaitingForPickup" selected="@(Model.Status == "WaitingForPickup")">Chờ lấy hàng</option>
-                            <option value="PickedUp" selected="@(Model.Status == "PickedUp")">Đã lấy hàng</option>
-                            <option value="Shipping" selected="@(Model.Status == "Shipping")">Đang vận chuyển</option>
+                        @{
+                            var statuses = new List<string> { "Pending", "WaitingForPickup", "PickedUp", "Shipping", "Delivered" };
+                            int currentIndex = statuses.IndexOf(Model.Status);
+                            bool isTerminal = Model.Status == "Cancelled" || Model.Status == "Delivered";
+                        }
+                        <select name="status" class="form-select" @(isTerminal ? "disabled" : "")>
+                            <option value="Pending" selected="@(Model.Status == "Pending")" disabled="@(currentIndex > 0)">Chờ xử lý</option>
+                            <option value="WaitingForPickup" selected="@(Model.Status == "WaitingForPickup")" disabled="@(currentIndex > 1)">Chờ lấy hàng</option>
+                            <option value="PickedUp" selected="@(Model.Status == "PickedUp")" disabled="@(currentIndex > 2)">Đã lấy hàng</option>
+                            <option value="Shipping" selected="@(Model.Status == "Shipping")" disabled="@(currentIndex > 3)">Đang vận chuyển</option>
                             <option value="Delivered" selected="@(Model.Status == "Delivered")">Đã giao</option>
-                            <option value="Cancelled" selected="@(Model.Status == "Cancelled")">Đã hủy</option>
+                            @if (Model.Status == "Cancelled")
+                            {
+                                <option value="Cancelled" selected>Đã hủy</option>
+                            }
                         </select>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary w-100">Cập nhật Trạng thái</button>
+                    <button type="submit" class="btn btn-primary w-100" @(isTerminal ? "disabled" : "")>Cập nhật Trạng thái</button>
                 </form>
             </div>
         </div>

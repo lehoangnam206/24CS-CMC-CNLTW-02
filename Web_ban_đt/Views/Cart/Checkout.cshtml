@@ -11,38 +11,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Thanh toán - TechStore</title>
     
-    <!-- Google Fonts: Inter & Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <style>
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #fcfcfd;
+            --surface-color: #ffffff;
+            --text-main: #0a0a0a;
+            --text-muted: #737373;
+            --bezier-smooth: cubic-bezier(0.32, 0.72, 0, 1);
+            --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.04);
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --radius-pill: 9999px;
+        }
+
         body {
-            background-color: #f8fafc;
+            background-color: var(--bg-color);
             font-family: 'Inter', sans-serif;
             margin: 0;
             padding: 0;
-            color: #0f172a;
+            color: var(--text-main);
             -webkit-font-smoothing: antialiased;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        input:-webkit-autofill { transition: background-color 50000s ease-in-out 0s; -webkit-text-fill-color: var(--text-main) !important; }
 
         .checkout-wrapper {
             width: 100%;
-            max-width: 1000px;
-            margin: 40px auto 80px auto;
-            padding: 0 20px;
+            max-width: 1100px;
+            margin: 40px auto 120px auto;
+            padding: 0 32px;
         }
         
         .header-section {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 64px;
             position: relative;
         }
         
@@ -51,79 +62,79 @@
             left: 0;
             top: 50%;
             transform: translateY(-50%);
-            width: 44px;
-            height: 44px;
-            background: #ffffff;
+            width: 56px;
+            height: 56px;
+            background: var(--surface-color);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            color: #1e293b;
+            color: var(--text-main);
             text-decoration: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            transition: all 0.3s;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s var(--bezier-smooth);
         }
         .back-btn:hover {
-            color: #4361ee;
+            color: var(--surface-color);
+            background: var(--primary-color);
             transform: translateY(-50%) scale(1.05);
-            box-shadow: 0 6px 16px rgba(67, 97, 238, 0.15);
         }
         
         .header-title {
-            font-family: 'Outfit', sans-serif;
-            font-size: 36px;
+            font-size: 32px;
             font-weight: 800;
-            color: #1e293b;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            letter-spacing: -0.5px;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            letter-spacing: -0.04em;
         }
         
         .header-subtitle {
-            color: #64748b;
-            font-size: 16px;
+            color: var(--text-muted);
+            font-size: 15px;
+            font-weight: 500;
         }
         
         .checkout-grid {
             display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 40px;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
         }
 
         .checkout-card {
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 32px;
-            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05);
-            border: 1px solid rgba(0,0,0,0.02);
+            background: var(--surface-color);
+            border-radius: var(--radius-xl);
+            padding: 6px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .checkout-card-inner {
+            background: var(--bg-color);
+            border-radius: calc(var(--radius-xl) - 6px);
+            padding: 48px;
         }
         
         .section-title {
-            font-family: 'Outfit', sans-serif;
-            font-size: 22px;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 24px;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 32px;
             margin-top: 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            letter-spacing: -0.02em;
         }
         
-        .form-group {
-            margin-bottom: 24px;
-        }
+        .form-group { margin-bottom: 24px; }
         .form-label {
             display: block;
-            font-weight: 600;
-            color: #475569;
-            margin-bottom: 10px;
-            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
+
         .input-group-custom {
             position: relative;
             display: flex;
@@ -131,113 +142,87 @@
         }
         .input-group-custom i {
             position: absolute;
-            left: 16px;
-            color: #94a3b8;
-            font-size: 20px;
+            left: 20px;
+            color: rgba(0,0,0,0.2);
+            font-size: 18px;
             transition: color 0.3s;
         }
         .input-group-custom input {
             width: 100%;
-            padding: 16px 16px 16px 52px;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
+            padding: 16px 20px 16px 56px;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: var(--radius-lg);
             font-size: 16px;
-            color: #0f172a;
-            background: #f8fafc;
+            font-weight: 500;
+            color: var(--text-main);
+            background: var(--surface-color);
             outline: none;
-            transition: all 0.3s;
+            transition: all 0.3s var(--bezier-smooth);
             font-family: inherit;
         }
         .input-group-custom input:focus {
-            background: #ffffff;
-            border-color: #4361ee;
-            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.1);
+            transform: translateY(-2px);
         }
-        .input-group-custom:focus-within i {
-            color: #4361ee;
-        }
-        .input-group-custom input[readonly] {
-            background-color: #f1f5f9;
-            color: #64748b;
-        }
+        .input-group-custom:focus-within i { color: var(--primary-color); }
+        .input-group-custom input[readonly] { background-color: rgba(0,0,0,0.02); color: var(--text-muted); }
         
         .payment-radio { display: none; }
         .payment-method {
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 24px 20px;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: var(--radius-lg);
+            padding: 24px;
             margin-bottom: 16px;
             cursor: pointer;
             display: flex;
-            align-items: flex-start;
-            gap: 16px;
-            transition: all 0.3s;
-            background: #f8fafc;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s var(--bezier-smooth);
+            background: var(--surface-color);
         }
-        .payment-method:hover {
-            background: #ffffff;
-            border-color: #cbd5e1;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-        }
+        .payment-method:hover { transform: translateY(-2px); box-shadow: var(--shadow-soft); }
         
         .radio-circle {
             width: 24px;
             height: 24px;
-            border: 2px solid #cbd5e1;
+            border: 2px solid rgba(0,0,0,0.2);
             border-radius: 50%;
-            margin-top: 2px;
             position: relative;
-            display: inline-block;
             flex-shrink: 0;
             transition: all 0.3s;
         }
         
         .payment-radio:checked + .payment-method {
-            border-color: #4361ee;
-            background: #ffffff;
-            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.08);
+            border-color: var(--text-main);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
         }
-        .payment-radio:checked + .payment-method .radio-circle {
-            border-color: #4361ee;
-        }
+        .payment-radio:checked + .payment-method .radio-circle { border-color: var(--text-main); }
         .payment-radio:checked + .payment-method .radio-circle::after {
             content: '';
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 12px;
-            height: 12px;
-            background: #4361ee;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 12px; height: 12px;
+            background: var(--primary-color);
             border-radius: 50%;
         }
         
         .payment-info { flex: 1; }
         .payment-title {
             font-weight: 700;
-            color: #1e293b;
+            color: var(--text-main);
             font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
-        .payment-title i { font-size: 24px; }
-        .payment-desc {
-            color: #64748b;
-            font-size: 14px;
-            margin-left: 36px;
-        }
+        .payment-desc { color: var(--text-muted); font-size: 14px; font-weight: 500; }
         
         .security-badge {
-            margin-top: 32px;
-            padding: 20px;
-            background: #f0fdf4;
-            border-radius: 16px;
-            border: 1px dashed #bbf7d0;
+            margin-top: 48px;
+            padding: 24px;
+            background: rgba(16, 185, 129, 0.05);
+            border-radius: var(--radius-lg);
             text-align: center;
-            color: #15803d;
+            color: #10b981;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -245,12 +230,12 @@
         }
         
         .submit-btn {
-            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            background: var(--primary-color);
             color: #fff;
             border: none;
             width: 100%;
-            padding: 20px;
-            border-radius: 16px;
+            padding: 24px;
+            border-radius: var(--radius-pill);
             font-size: 18px;
             font-weight: 700;
             display: flex;
@@ -258,123 +243,119 @@
             justify-content: center;
             gap: 12px;
             cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 40px;
-            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.3);
+            transition: all 0.4s var(--bezier-smooth);
+            margin-top: 48px;
+            box-shadow: 0 16px 32px rgba(0,0,0,0.15);
             font-family: inherit;
         }
         .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(67, 97, 238, 0.4);
+            transform: scale(0.98);
+            background: var(--primary-color);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.25);
         }
         
         @@media (max-width: 768px) {
-            .checkout-grid {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-            .back-btn {
-                position: relative;
-                top: 0;
-                transform: none;
-                margin-bottom: 20px;
-                display: inline-flex;
-            }
+            .checkout-grid { grid-template-columns: 1fr; gap: 32px; }
+            .back-btn { position: relative; top: 0; transform: none; margin-bottom: 24px; display: inline-flex; }
+            .checkout-wrapper { padding: 0 20px; }
         }
     </style>
-<style>* { font-family: 'Times New Roman', Times, serif !important; }</style></head>
+</head>
 <body>
     <div class="checkout-wrapper">
         <div class="header-section">
-            <a href="/Cart/Index" class="back-btn"><i class="bi bi-chevron-left"></i></a>
-            <div class="header-title">
-                <i class="bi bi-credit-card-2-front text-primary"></i>
-                Thanh toán
-            </div>
-            <div class="header-subtitle">Vui lòng kiểm tra thông tin giao hàng thật kĩ trước khi thanh toán</div>
+            <a href="/Cart/Index" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+            <div class="header-title">Thanh toán</div>
+            <div class="header-subtitle">Xác nhận thông tin giao hàng và phương thức thanh toán.</div>
         </div>
 
         <form asp-action="Checkout" method="post" id="checkoutForm">
             @Html.AntiForgeryToken()
             
             <div class="checkout-grid">
-                <!-- Left Column: Shipping Info -->
+                <!-- Thông tin giao hàng -->
                 <div class="checkout-card">
-                    <h3 class="section-title"><i class="bi bi-geo-alt-fill text-primary"></i> Thông tin giao hàng</h3>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Họ và tên</label>
-                        <div class="input-group-custom">
-                            <i class="bi bi-person"></i>
-                            <input type="text" value="@user?.FullName" readonly placeholder="Nhập họ và tên của bạn" />
+                    <div class="checkout-card-inner">
+                        <h3 class="section-title">Giao hàng</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Họ và tên</label>
+                            <div class="input-group-custom">
+                                <i class="bi bi-person"></i>
+                                <input type="text" value="@user?.FullName" readonly />
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Số điện thoại</label>
-                        <div class="input-group-custom">
-                            <i class="bi bi-telephone"></i>
-                            <input type="text" value="@user?.PhoneNumber" readonly placeholder="Nhập số điện thoại của bạn" />
+                        
+                        <div class="form-group">
+                            <label class="form-label">Số điện thoại</label>
+                            <div class="input-group-custom">
+                                <i class="bi bi-telephone"></i>
+                                <input type="text" value="@user?.PhoneNumber" readonly />
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Địa chỉ giao hàng</label>
-                        <div class="input-group-custom">
-                            <i class="bi bi-geo-alt"></i>
-                            <input type="text" name="shippingAddress" required placeholder="Nhập địa chỉ giao hàng của bạn chi tiết" />
+                        
+                        <div class="form-group">
+                            <label class="form-label">Địa chỉ giao hàng</label>
+                            <div class="input-group-custom">
+                                <i class="bi bi-geo-alt"></i>
+                                <input type="text" name="shippingAddress" required placeholder="Nhập địa chỉ chi tiết..." />
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="form-group mb-0">
-                        <label class="form-label">Email</label>
-                        <div class="input-group-custom">
-                            <i class="bi bi-envelope"></i>
-                            <input type="email" value="@user?.Email" readonly placeholder="Nhập email của bạn" />
+                        
+                        <div class="form-group mb-0">
+                            <label class="form-label">Email</label>
+                            <div class="input-group-custom">
+                                <i class="bi bi-envelope"></i>
+                                <input type="email" value="@user?.Email" readonly />
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Right Column: Payment Methods -->
-                <div class="checkout-card" style="background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);">
-                    <h3 class="section-title"><i class="bi bi-wallet-fill text-primary"></i> Phương thức thanh toán</h3>
-                    
-                    <div class="payment-method-wrapper">
-                        <input type="radio" name="paymentMethod" value="VNPAY" id="payVNPAY" class="payment-radio" checked>
-                        <label class="payment-method" for="payVNPAY">
-                            <div class="radio-circle"></div>
-                            <div class="payment-info">
-                                <div class="payment-title"><i class="bi bi-bank text-primary"></i> Chuyển khoản ngân hàng</div>
-                                <div class="payment-desc">Thanh toán nhanh chóng qua quét mã QR</div>
-                            </div>
-                        </label>
-                    </div>
-                    
-                    <div class="payment-method-wrapper">
-                        <input type="radio" name="paymentMethod" value="COD" id="payCOD" class="payment-radio">
-                        <label class="payment-method" for="payCOD">
-                            <div class="radio-circle"></div>
-                            <div class="payment-info">
-                                <div class="payment-title"><i class="bi bi-cash-stack text-success"></i> Tiền mặt (COD)</div>
-                                <div class="payment-desc">Thanh toán khi nhận được hàng</div>
-                            </div>
-                        </label>
-                    </div>
-                    
-                    <div class="security-badge">
-                        <i class="bi bi-shield-check" style="font-size: 32px;"></i>
-                        <span style="font-weight: 600;">Giao dịch được bảo vệ an toàn với SSL</span>
-                    </div>
+                <!-- Thanh toán -->
+                <div class="checkout-card">
+                    <div class="checkout-card-inner">
+                        <h3 class="section-title">Thanh toán</h3>
+                        
+                        <div class="payment-method-wrapper">
+                            <input type="radio" name="paymentMethod" value="VNPAY" id="payVNPAY" class="payment-radio" checked>
+                            <label class="payment-method" for="payVNPAY">
+                                <div class="radio-circle"></div>
+                                <div class="payment-info">
+                                    <div class="payment-title">Ngân hàng & VNPay</div>
+                                    <div class="payment-desc">Quét mã QR tiện lợi</div>
+                                </div>
+                                <i class="bi bi-qr-code" style="font-size: 24px; color: var(--text-muted);"></i>
+                            </label>
+                        </div>
+                        
+                        <div class="payment-method-wrapper">
+                            <input type="radio" name="paymentMethod" value="COD" id="payCOD" class="payment-radio">
+                            <label class="payment-method" for="payCOD">
+                                <div class="radio-circle"></div>
+                                <div class="payment-info">
+                                    <div class="payment-title">Tiền mặt (COD)</div>
+                                    <div class="payment-desc">Thanh toán khi nhận hàng</div>
+                                </div>
+                                <i class="bi bi-cash" style="font-size: 24px; color: var(--text-muted);"></i>
+                            </label>
+                        </div>
+                        
+                        <div class="security-badge">
+                            <i class="bi bi-shield-check" style="font-size: 32px;"></i>
+                            <span style="font-weight: 700; font-size: 14px;">Giao dịch được mã hóa và bảo mật tuyệt đối</span>
+                        </div>
 
-                    @{
-                        var subtotal = Model?.Sum(i => i.Price * i.Qty) ?? 0m;
-                        var shipping = (subtotal > 0) ? 20000m : 0m;
-                        var total = Math.Max(subtotal + shipping - discount, 0m);
-                    }
+                        @{
+                            var subtotal = Model?.Sum(i => i.Price * i.Qty) ?? 0m;
+                            var shipping = (subtotal > 0) ? 20000m : 0m;
+                            var total = Math.Max(subtotal + shipping - discount, 0m);
+                        }
 
-                    <button type="submit" class="submit-btn">
-                        Xác nhận đặt hàng &bull; @total.ToString("N0")đ
-                    </button>
+                        <button type="submit" class="submit-btn">
+                            Thanh toán @total.ToString("N0")đ
+                        </button>
+                    </div>
                 </div>
             </div>
         </form>

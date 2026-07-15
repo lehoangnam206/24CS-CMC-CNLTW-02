@@ -5,9 +5,12 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h3 class="mb-1 text-techblue fw-bold">Danh sách Người dùng</h3>
-        <p class="text-muted mb-0">Quản lý tài khoản và phân quyền hệ thống</p>
+        <h3 class="mb-1 text-techblue fw-bold">Danh sách Nhân viên</h3>
+        <p class="text-muted mb-0">Quản lý tài khoản nhân viên</p>
     </div>
+    <a asp-action="Create" class="btn btn-primary" style="border-radius: 8px;">
+        <i class="bi bi-plus-lg me-1"></i> Thêm Nhân viên
+    </a>
 </div>
 
 <div class="card shadow-sm border-0" style="border-radius: 16px; overflow: hidden;">
@@ -31,10 +34,15 @@
                             <td class="px-4 py-3 border-bottom-0 text-muted" style="border-bottom: 1px solid #f1f5f9 !important;">#@user.UserId</td>
                             <td class="px-4 py-3 border-bottom-0" style="border-bottom: 1px solid #f1f5f9 !important;">
                                 <div class="d-flex align-items-center">
+                                    @{
+                                        var displayStr = !string.IsNullOrEmpty(user.Username) ? user.Username : (!string.IsNullOrEmpty(user.FullName) ? user.FullName : "?");
+                                        var initial = displayStr.Substring(0, 1).ToUpper();
+                                        var displayName = !string.IsNullOrEmpty(user.Username) ? user.Username : "N/A";
+                                    }
                                     <div style="width: 36px; height: 36px; border-radius: 50%; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px;">
-                                        @(user.Username.Substring(0, 1).ToUpper())
+                                        @initial
                                     </div>
-                                    <span class="fw-bold" style="color: #1e293b;">@user.Username</span>
+                                    <span class="fw-bold" style="color: #1e293b;">@displayName</span>
                                 </div>
                             </td>
                             <td class="px-4 py-3 border-bottom-0 fw-medium" style="border-bottom: 1px solid #f1f5f9 !important; color: #334155;">@user.FullName</td>
@@ -60,17 +68,14 @@
                                     <a asp-action="Details" asp-route-id="@user.UserId" class="btn btn-sm text-info" style="background: #e0f2fe; border-radius: 8px;" title="Chi tiết">
                                         <i class="bi bi-eye"></i>
                                     </a>
+                                    <a asp-action="Edit" asp-route-id="@user.UserId" class="btn btn-sm text-primary" style="background: #e0e7ff; border-radius: 8px;" title="Chỉnh sửa">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
                                     @if (user.Role != "Admin")
                                     {
                                         <form asp-action="ToggleLock" asp-route-id="@user.UserId" method="post" style="display:inline;">
                                             <button type="submit" class="btn btn-sm text-warning" style="background: #fef3c7; border-radius: 8px;" title="@(user.IsLocked ? "Mở khóa" : "Khóa tài khoản")">
                                                 <i class="bi @(user.IsLocked ? "bi-unlock" : "bi-lock")"></i>
-                                            </button>
-                                        </form>
-                                        <form asp-action="ChangeRole" asp-route-id="@user.UserId" method="post" style="display:inline;">
-                                            <input type="hidden" name="role" value="@(user.Role == "Employee" ? "Customer" : "Employee")" />
-                                            <button type="submit" class="btn btn-sm text-success" style="background: #dcfce3; border-radius: 8px;" title="Cấp/Hủy quyền Nhân viên">
-                                                <i class="bi bi-person-badge"></i>
                                             </button>
                                         </form>
                                     }

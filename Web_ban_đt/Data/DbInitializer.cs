@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Hosting;
 using TechStoreWeb.Models;
@@ -28,6 +29,23 @@ namespace TechStoreWeb.Data
                     Role = "Admin",
                     IsLocked = false
                 });
+                context.SaveChanges();
+            }
+
+            // Fix usernames to be without diacritics
+            var existingUsers = context.Users.Where(u => !string.IsNullOrEmpty(u.Username)).ToList();
+            bool usersChanged = false;
+            foreach (var user in existingUsers)
+            {
+                var cleanUsername = RemoveDiacritics(user.Username).Replace(" ", "");
+                if (cleanUsername != user.Username)
+                {
+                    user.Username = cleanUsername;
+                    usersChanged = true;
+                }
+            }
+            if (usersChanged)
+            {
                 context.SaveChanges();
             }
 
@@ -75,53 +93,10 @@ namespace TechStoreWeb.Data
             var existingCategories = context.Categories.ToList();
             bool needsCategoryUpdate = brandFolders.Any(bf => !existingCategories.Any(ec => ec.CategoryName.Equals(bf, StringComparison.OrdinalIgnoreCase)));
 
-            if (needsCategoryUpdate || !context.Categories.Any() || hasPlaceholders)
+            if (!context.Categories.Any())
             {
-                // Clear existing products and categories first
-                context.Products.RemoveRange(context.Products);
-                context.Categories.RemoveRange(context.Categories);
-                context.SaveChanges();
-
-                foreach (var folder in brandFolders)
-                {
-                    context.Categories.Add(new Category { CategoryName = folder });
-                }
-                context.SaveChanges();
-
-                var categoryList = context.Categories.ToList();
-
-                foreach (var category in categoryList)
-                {
-                    string categoryImageDir = Path.Combine(targetWebPath, category.CategoryName);
-                    if (Directory.Exists(categoryImageDir))
-                    {
-                        var imageFiles = Directory.GetFiles(categoryImageDir)
-                            .Where(f => f.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                                        f.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
-                                        f.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
-                                        f.EndsWith(".webp", StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-
-                        int index = 1;
-                        foreach (var imgFile in imageFiles)
-                        {
-                            string fileName = Path.GetFileName(imgFile);
-                            string fileNameWithoutExt = Path.GetFileNameWithoutExtension(imgFile);
-                            string productName = CleanProductName(fileNameWithoutExt, category.CategoryName, index);
-                            decimal price = GeneratePrice(category.CategoryName, index);
-
-                            context.Products.Add(new Product
-                            {
-                                Name = productName,
-                                Price = price,
-                                ImageUrl = $"/images/{category.CategoryName}/{fileName}",
-                                CategoryId = category.CategoryId
-                            });
-                            index++;
-                        }
-                    }
-                }
-                context.SaveChanges();
+                // MOCK DATA GENERATION DISABLED
+                // Dữ liệu thật đã được nạp từ data.sql
             }
         }
 
@@ -194,7 +169,7 @@ namespace TechStoreWeb.Data
                     basePrice = 2200000 + (index * 400000);
                     break;
                 case "nokia":
-                    basePrice = 1200000 + (index * 300000);
+                    basePrice = 5700000;  // Fixed price for Nokia 105
                     break;
                 default:
                     basePrice = 3000000 + (index * 500000);
@@ -204,6 +179,24 @@ namespace TechStoreWeb.Data
             // Round to nearest 10,000 VND
             basePrice = (basePrice / 10000) * 10000;
             return (decimal)basePrice;
+        }
+
+        private static string RemoveDiacritics(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return text;
+            var normalizedString = text.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new System.Text.StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC).Replace("đ", "d").Replace("Đ", "D");
         }
     }
 }

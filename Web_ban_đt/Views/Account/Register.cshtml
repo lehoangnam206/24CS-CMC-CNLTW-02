@@ -4,10 +4,9 @@
 }
 
 @section Styles {
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         .auth-wrapper {
-            background-color: #f8fafc;
+            background-color: var(--bg-color);
             min-height: calc(100vh - 72px);
             width: 100vw;
             position: relative;
@@ -18,140 +17,140 @@
             justify-content: center;
             padding: 40px 20px;
             margin: 0;
-            font-family: 'Outfit', sans-serif;
         }
         
         .auth-card {
             display: flex;
-            background: #ffffff;
-            border-radius: 24px;
-            box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.15);
-            overflow: hidden;
+            background: var(--surface-color);
+            border-radius: var(--radius-xl);
+            padding: 8px;
+            box-shadow: var(--shadow-float);
             width: 100%;
-            max-width: 960px;
-            min-height: 580px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            max-width: 1100px;
+            min-height: 640px;
+            border: 1px solid rgba(0,0,0,0.03);
         }
         
         .auth-left {
             flex: 1.2;
             background: url('/images/Giao diện trang chủ/Đăng kí.png') center/cover no-repeat;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 60px;
-            color: white;
+            border-radius: calc(var(--radius-xl) - 8px);
             position: relative;
             overflow: hidden;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
         }
         
         .auth-right {
             flex: 1;
-            padding: 50px 60px;
+            padding: 48px 64px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            background-color: #ffffff;
+            background-color: var(--surface-color);
         }
         
         .auth-title {
-            font-size: 32px;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            letter-spacing: -0.04em;
         }
 
         .auth-subtitle {
-            color: #64748b;
+            color: var(--text-muted);
             font-size: 15px;
-            margin-bottom: 24px;
+            margin-bottom: 40px;
+            font-weight: 500;
         }
         
         .input-group-custom {
             display: flex;
             align-items: center;
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 2px 20px;
-            margin-bottom: 14px;
-            transition: all 0.3s ease;
+            background-color: var(--bg-color);
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: var(--radius-lg);
+            padding: 2px 24px;
+            margin-bottom: 16px;
+            transition: all 0.3s var(--bezier-smooth);
         }
         
         .input-group-custom:focus-within {
-            background-color: #ffffff;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            background-color: var(--surface-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.1);
+            transform: translateY(-2px);
         }
 
         .input-group-custom i {
             font-size: 18px;
-            color: #94a3b8;
-            margin-right: 12px;
-            transition: color 0.3s ease;
+            color: rgba(0,0,0,0.2);
+            margin-right: 16px;
+            transition: color 0.3s;
         }
 
-        .input-group-custom:focus-within i {
-            color: #3b82f6;
-        }
+        .input-group-custom:focus-within i { color: var(--primary-color); }
         
         .form-control-custom {
             flex: 1;
             border: none;
             background: transparent;
-            padding: 12px 0;
-            font-size: 14px;
-            color: #0f172a;
+            padding: 14px 0;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-main);
             outline: none;
             font-family: inherit;
         }
         
-        .form-control-custom::placeholder {
-            color: #94a3b8;
-        }
+        .form-control-custom::placeholder { color: var(--text-muted); font-weight: 400; }
         
         .btn-register {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            color: white;
+            background: var(--primary-color);
+            color: var(--surface-color);
             border: none;
-            border-radius: 12px;
-            padding: 16px;
+            border-radius: var(--radius-pill);
+            padding: 18px;
             width: 100%;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 16px;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            margin-bottom: 20px;
+            transition: all 0.4s var(--bezier-smooth);
+            margin-top: 16px;
+            margin-bottom: 24px;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
             font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
         }
         
         .btn-register:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+            transform: translateY(-4px) scale(0.98);
+            box-shadow: 0 16px 32px rgba(0,0,0,0.2);
+            background: var(--primary-color);
         }
         
         .social-divider {
             display: flex;
             align-items: center;
             text-align: center;
-            color: #64748b;
-            font-size: 14px;
-            margin-bottom: 20px;
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 24px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         
         .social-divider::before, .social-divider::after {
             content: '';
             flex: 1;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
         
-        .social-divider span {
-            padding: 0 16px;
-            font-weight: 500;
-        }
+        .social-divider span { padding: 0 16px; }
         
         .social-icons {
             display: flex;
@@ -163,20 +162,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             font-size: 20px;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            background: #ffffff;
-            transition: all 0.2s;
+            border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.05);
+            background: var(--bg-color);
+            transition: all 0.3s var(--bezier-smooth);
             text-decoration: none;
-            color: #475569;
+            color: var(--text-main);
         }
         
         .social-icons a:hover {
-            background: #f8fafc;
-            transform: translateY(-2px);
+            background: var(--surface-color);
+            box-shadow: var(--shadow-soft);
+            transform: translateY(-4px) scale(1.1);
         }
         
         .social-icons a.google:hover { color: #ea4335; border-color: #ea4335; }
@@ -184,54 +184,42 @@
         
         .login-link {
             text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-            color: #64748b;
+            margin-top: 32px;
+            font-size: 15px;
+            color: var(--text-muted);
+            font-weight: 500;
         }
 
         .login-link a {
-            color: #3b82f6;
-            font-weight: 600;
+            color: var(--text-main);
+            font-weight: 700;
             text-decoration: none;
+            margin-left: 4px;
+            transition: color 0.3s;
         }
 
-        .login-link a:hover {
-            text-decoration: underline;
-        }
+        .login-link a:hover { color: var(--primary-color); }
 
         @@media (max-width: 768px) {
-            .auth-card {
-                flex-direction: column;
-            }
-            .auth-left {
-                min-height: 250px;
-                padding: 40px;
-                text-align: center;
-            }
-            .auth-right {
-                padding: 40px;
-            }
+            .auth-card { flex-direction: column; }
+            .auth-left { min-height: 250px; border-radius: calc(var(--radius-xl) - 8px) calc(var(--radius-xl) - 8px) 0 0; }
+            .auth-right { padding: 40px 24px; }
         }
-        footer {
-            display: none !important;
-        }
+        footer { display: none !important; }
     </style>
 }
 
 <div class="auth-wrapper">
     <div class="auth-card">
-        <!-- Left Side: Image/Branding -->
-        <div class="auth-left">
-            <!-- No overlay content as requested -->
-        </div>
+        <div class="auth-left"></div>
 
-        <!-- Right Side: Form -->
         <div class="auth-right">
             <h3 class="auth-title">Tạo Tài Khoản</h3>
             <p class="auth-subtitle">Điền đầy đủ thông tin để bắt đầu</p>
             
             <form asp-action="Register" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3" style="font-size: 14px; padding: 10px; background: #fee2e2; border-radius: 8px;"></div>
+                <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+                <div asp-validation-summary="All" style="font-size: 14px; padding: 16px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: var(--radius-lg); margin-bottom: 24px; font-weight: 500;"></div>
 
                 <div class="input-group-custom">
                     <i class="bi bi-person"></i>
@@ -263,19 +251,19 @@
                     <input type="password" name="ConfirmPassword" class="form-control-custom" placeholder="Xác nhận mật khẩu" required />
                 </div>
 
-                <button type="submit" class="btn-register">Tạo tài khoản <i class="bi bi-person-plus ms-1"></i></button>
+                <button type="submit" class="btn-register">Tạo tài khoản <i class="bi bi-arrow-right"></i></button>
                 
                 <div class="social-divider">
-                    <span>hoặc đăng ký bằng</span>
+                    <span>Hoặc đăng ký bằng</span>
                 </div>
                 
                 <div class="social-icons">
-                    <a href="#" class="google" title="Google"><i class="bi bi-google"></i></a>
-                    <a href="#" class="facebook" title="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="/Account/ExternalLogin?provider=Google&returnUrl=@(ViewData["ReturnUrl"] ?? "/")" class="google" title="Đăng ký bằng Google"><i class="bi bi-google"></i></a>
+                    <a href="/Account/ExternalLogin?provider=Facebook&returnUrl=@(ViewData["ReturnUrl"] ?? "/")" class="facebook" title="Đăng ký bằng Facebook"><i class="bi bi-facebook"></i></a>
                 </div>
 
                 <div class="login-link">
-                    Đã có tài khoản? <a href="/Account/Login">Đăng nhập ngay</a>
+                    Đã có tài khoản? <a href="/Account/Login?returnUrl=@ViewData["ReturnUrl"]">Đăng nhập</a>
                 </div>
             </form>
         </div>

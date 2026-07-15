@@ -1,0 +1,349 @@
+<div class="ai-chatbot" id="aiChatbot" data-open="false">
+    <button class="ai-chatbot-toggle" type="button" aria-label="Mở tư vấn AI" id="aiChatbotToggle">
+        <i class="bi bi-chat-dots"></i>
+        <span>Tư vấn AI</span>
+    </button>
+
+    <section class="ai-chatbot-panel" aria-label="Chatbot tư vấn khách hàng">
+        <div class="ai-chatbot-head">
+            <div>
+                <strong>TECHBLUE AI</strong>
+                <span>RAG tư vấn điện thoại</span>
+            </div>
+            <button type="button" class="ai-chatbot-close" aria-label="Đóng chatbot" id="aiChatbotClose">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="ai-chatbot-memory" id="aiChatbotMemory" hidden></div>
+        <div class="ai-chatbot-messages" id="aiChatbotMessages">
+            <div class="ai-chatbot-msg bot">
+                Chào bạn, mình có thể tư vấn theo cấu hình, ngân sách, camera, pin, chơi game và chính sách bảo hành. Bạn đang phân vân máy nào?
+            </div>
+        </div>
+
+        <form class="ai-chatbot-form" id="aiChatbotForm">
+            <textarea id="aiChatbotInput" rows="1" placeholder="Ví dụ: Tầm 15 triệu, ưu tiên camera, nên mua iPhone hay Samsung?"></textarea>
+            <button type="submit" aria-label="Gửi câu hỏi">
+                <i class="bi bi-send-fill"></i>
+            </button>
+        </form>
+    </section>
+</div>
+
+<style>
+    .ai-chatbot {
+        position: fixed;
+        right: 22px;
+        bottom: 22px;
+        z-index: 1100;
+        font-family: inherit;
+    }
+
+    .ai-chatbot-toggle {
+        height: 48px;
+        border: 0;
+        border-radius: 999px;
+        padding: 0 18px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: #111827;
+        color: #ffffff;
+        font-weight: 800;
+        box-shadow: 0 16px 40px rgba(17, 24, 39, 0.24);
+        cursor: pointer;
+    }
+
+    .ai-chatbot-toggle i { font-size: 18px; }
+
+    .ai-chatbot-panel {
+        position: absolute;
+        right: 0;
+        bottom: 64px;
+        width: min(390px, calc(100vw - 32px));
+        height: min(620px, calc(100dvh - 104px));
+        background: #ffffff;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        border-radius: 18px;
+        box-shadow: 0 28px 80px rgba(15, 23, 42, 0.22);
+        overflow: hidden;
+        display: none;
+        flex-direction: column;
+    }
+
+    .ai-chatbot[data-open="true"] .ai-chatbot-panel { display: flex; }
+
+    .ai-chatbot-head {
+        min-height: 64px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #2563eb;
+        color: #ffffff;
+    }
+
+    .ai-chatbot-head strong {
+        display: block;
+        font-size: 14px;
+        letter-spacing: 0;
+    }
+
+    .ai-chatbot-head span {
+        display: block;
+        font-size: 12px;
+        opacity: 0.86;
+        margin-top: 1px;
+    }
+
+    .ai-chatbot-close {
+        width: 34px;
+        height: 34px;
+        border: 0;
+        border-radius: 50%;
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.16);
+        cursor: pointer;
+    }
+
+    .ai-chatbot-memory {
+        padding: 8px 14px;
+        background: #eff6ff;
+        color: #1d4ed8;
+        font-size: 12px;
+        line-height: 1.45;
+        border-bottom: 1px solid rgba(37, 99, 235, 0.12);
+    }
+
+    .ai-chatbot-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        background: #f8fafc;
+    }
+
+    .ai-chatbot-msg {
+        max-width: 86%;
+        padding: 10px 12px;
+        border-radius: 14px;
+        font-size: 14px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
+    .ai-chatbot-msg.bot {
+        align-self: flex-start;
+        background: #ffffff;
+        color: #0f172a;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        border-top-left-radius: 6px;
+    }
+
+    .ai-chatbot-msg.user {
+        align-self: flex-end;
+        background: #2563eb;
+        color: #ffffff;
+        border-top-right-radius: 6px;
+    }
+
+    .ai-chatbot-msg.loading {
+        color: #64748b;
+        font-style: italic;
+    }
+
+    .ai-chatbot-sources {
+        margin-top: 8px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .ai-chatbot-source {
+        border-radius: 999px;
+        background: #eef2ff;
+        color: #3730a3;
+        padding: 4px 8px;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .ai-chatbot-form {
+        display: grid;
+        grid-template-columns: 1fr 42px;
+        gap: 10px;
+        padding: 12px;
+        background: #ffffff;
+        border-top: 1px solid rgba(15, 23, 42, 0.08);
+    }
+
+    .ai-chatbot-form textarea {
+        min-height: 42px;
+        max-height: 110px;
+        resize: none;
+        border: 1px solid rgba(15, 23, 42, 0.12);
+        border-radius: 12px;
+        padding: 10px 12px;
+        outline: none;
+        font: inherit;
+        font-size: 14px;
+        line-height: 1.45;
+    }
+
+    .ai-chatbot-form textarea:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .ai-chatbot-form button {
+        width: 42px;
+        height: 42px;
+        border: 0;
+        border-radius: 12px;
+        background: #2563eb;
+        color: #ffffff;
+        cursor: pointer;
+    }
+
+    .ai-chatbot-form button:disabled {
+        opacity: 0.55;
+        cursor: wait;
+    }
+
+    @@media (max-width: 640px) {
+        .ai-chatbot {
+            right: 16px;
+            bottom: 16px;
+        }
+
+        .ai-chatbot-panel {
+            position: fixed;
+            inset: auto 12px 76px 12px;
+            width: auto;
+            height: min(620px, calc(100dvh - 96px));
+        }
+    }
+</style>
+
+<script>
+    (() => {
+        const root = document.getElementById('aiChatbot');
+        const toggle = document.getElementById('aiChatbotToggle');
+        const close = document.getElementById('aiChatbotClose');
+        const form = document.getElementById('aiChatbotForm');
+        const input = document.getElementById('aiChatbotInput');
+        const messages = document.getElementById('aiChatbotMessages');
+        const memory = document.getElementById('aiChatbotMemory');
+
+        if (!root || !toggle || !form || !input || !messages) return;
+
+        const scrollToBottom = () => {
+            messages.scrollTop = messages.scrollHeight;
+        };
+
+        const appendMessage = (role, text, sources) => {
+            const item = document.createElement('div');
+            item.className = `ai-chatbot-msg ${role}`;
+            item.textContent = text;
+
+            if (sources && sources.length) {
+                const sourceWrap = document.createElement('div');
+                sourceWrap.className = 'ai-chatbot-sources';
+                sources.slice(0, 3).forEach(source => {
+                    const badge = document.createElement('span');
+                    badge.className = 'ai-chatbot-source';
+                    badge.textContent = source.title;
+                    sourceWrap.appendChild(badge);
+                });
+                item.appendChild(sourceWrap);
+            }
+
+            messages.appendChild(item);
+            scrollToBottom();
+            return item;
+        };
+
+        const updateMemory = (data) => {
+            if (!data) return;
+            const parts = [];
+            if (data.preferredBrands) parts.push(`Hãng: ${data.preferredBrands}`);
+            if (data.budget && data.budget !== 'chua co') parts.push(`Ngân sách: ${data.budget}`);
+            if (data.useCases) parts.push(`Nhu cầu: ${data.useCases}`);
+            memory.textContent = parts.join(' | ');
+            memory.hidden = parts.length === 0;
+        };
+
+        toggle.addEventListener('click', async () => {
+            const next = root.dataset.open !== 'true';
+            root.dataset.open = next ? 'true' : 'false';
+            if (next) {
+                input.focus();
+                try {
+                    const response = await fetch('/chatbot/history');
+                    if (response.ok) {
+                        const history = await response.json();
+                        if (history.length && messages.dataset.loaded !== 'true') {
+                            messages.innerHTML = '';
+                            history.forEach(item => appendMessage(item.role === 'user' ? 'user' : 'bot', item.content));
+                            messages.dataset.loaded = 'true';
+                        }
+                    }
+                } catch { }
+            }
+        });
+
+        close?.addEventListener('click', () => {
+            root.dataset.open = 'false';
+        });
+
+        input.addEventListener('input', () => {
+            input.style.height = 'auto';
+            input.style.height = `${Math.min(input.scrollHeight, 110)}px`;
+        });
+
+        input.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                form.requestSubmit();
+            }
+        });
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const text = input.value.trim();
+            if (!text) return;
+
+            appendMessage('user', text);
+            input.value = '';
+            input.style.height = 'auto';
+            const loading = appendMessage('bot loading', 'Đang tìm dữ liệu sản phẩm phù hợp...');
+            const button = form.querySelector('button');
+            button.disabled = true;
+
+            try {
+                const response = await fetch('/chatbot/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text })
+                });
+
+                if (!response.ok) throw new Error('Request failed');
+
+                const data = await response.json();
+                loading.remove();
+                appendMessage('bot', data.answer || 'Mình chưa có câu trả lời phù hợp.', data.sources || []);
+                updateMemory(data.memory);
+            } catch {
+                loading.textContent = 'Mình đang gặp lỗi kết nối. Bạn thử lại giúp mình sau vài giây nhé.';
+                loading.classList.remove('loading');
+            } finally {
+                button.disabled = false;
+                input.focus();
+            }
+        });
+    })();
+</script>

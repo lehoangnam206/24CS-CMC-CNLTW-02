@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d  # Tự động nạp dữ liệu từ file data.sql khi khởi động
+
+  web-app:
+    image: techstore-web-app
+    build:
+      context: .
+      dockerfile: Web_ban_đt/Dockerfile  # Đường dẫn đến file Dockerfile của bạn
+    ports:
+      - "5000:80"  # Link chạy trang web sau này: http://localhost:5000
+    depends_on:
+      - db

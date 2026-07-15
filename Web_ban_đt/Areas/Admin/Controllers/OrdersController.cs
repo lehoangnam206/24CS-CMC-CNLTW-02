@@ -60,9 +60,24 @@ namespace TechStoreWeb.Areas.Admin.Controllers
             var order = await _context.Orders.FindAsync(orderId);
             if (order != null)
             {
-                order.Status = status;
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = $"Cập nhật trạng thái đơn hàng #{orderId} thành công!";
+                var statuses = new List<string> { "Pending", "WaitingForPickup", "PickedUp", "Shipping", "Delivered" };
+                int currentIndex = statuses.IndexOf(order.Status);
+                int newIndex = statuses.IndexOf(status);
+
+                bool isInvalid = false;
+                if (order.Status == "Cancelled" || order.Status == "Delivered") isInvalid = true;
+                if (currentIndex >= 0 && newIndex >= 0 && newIndex < currentIndex) isInvalid = true;
+
+                if (isInvalid && order.Status != status)
+                {
+                    TempData["ErrorMessage"] = "Lỗi: Không thể quay ngược trạng thái hoặc cập nhật đơn hàng đã đóng.";
+                }
+                else
+                {
+                    order.Status = status;
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = $"Cập nhật trạng thái đơn hàng #{orderId} thành công!";
+                }
             }
             else
             {

@@ -1,3 +1,4 @@
+@inject TechStoreWeb.Data.AppDbContext _layoutContext
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -5,29 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - TechStore</title>
 
-    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
-        /* 1. Global Styles & Variables */
+        /* 1. Global Styles & Premium Variables */
         :root {
             --primary-color: #2563eb;
             --primary-hover: #1d4ed8;
-            --bg-color: #f8fafc;
+            --bg-color: #fcfcfd;
             --surface-color: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --shadow-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --transition-speed: 0.3s;
+            --text-main: #0a0a0a;
+            --text-muted: #737373;
+            
+            --bezier-smooth: cubic-bezier(0.32, 0.72, 0, 1);
+            --bezier-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --transition-speed: 0.5s;
+
+            /* Haptic shadows & Structural depths */
+            --shadow-float: 0 24px 48px -12px rgba(0, 0, 0, 0.08);
+            --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.04);
+            --shadow-inner: inset 0 1px 1px rgba(255, 255, 255, 0.8);
+            
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --radius-pill: 9999px;
         }
 
         * {
@@ -40,13 +47,15 @@
 
         body {
             background-color: var(--bg-color);
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 15px;
             color: var(--text-main);
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: -0.01em;
+            line-height: 1.6;
         }
 
-        /* Loại bỏ nền xanh của Chrome Autofill cho tất cả ô nhập liệu */
         input:-webkit-autofill,
         input:-webkit-autofill:hover, 
         input:-webkit-autofill:focus, 
@@ -57,289 +66,255 @@
 
         .container {
             width: 100%;
-            max-width: 1920px; /* Tràn viền màn hình lớn như trước */
+            max-width: 1920px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 24px;
         }
 
-        /* 2. Header (Glassmorphism) */
+        /* 2. Classic E-commerce Header */
         .site-header {
-            height: 72px;
-            background-color: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background-color: var(--primary-color);
+            background: linear-gradient(90deg, #2563eb, #1d4ed8);
             position: sticky;
             top: 0;
             z-index: 1000;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            box-shadow: var(--shadow-sm);
-            transition: background-color var(--transition-speed) ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            width: 100%;
         }
 
         .site-header .container {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 24px;
+            display: flex;
             align-items: center;
-            height: 100%;
+            height: 64px;
+            gap: 16px;
         }
 
         .header-logo {
-            display: inline-flex;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
             align-items: center;
-            transition: transform var(--transition-speed) cubic-bezier(0.34, 1.56, 0.64, 1);
+            flex-shrink: 0;
         }
-        
-        .header-logo:hover {
-            transform: scale(1.03);
-        }
-
-        .header-logo img {
-            height: 44px;
-            border-radius: 8px;
-            object-fit: contain;
-        }
+        .header-logo:hover { color: #ffffff; opacity: 0.9; }
 
         .search-bar-container {
             display: flex;
-            min-width: 450px;
-            border-radius: 24px;
+            flex: 1;
+            border-radius: 8px;
+            background-color: #ffffff;
+            height: 38px;
+            position: relative;
+            align-items: center;
             overflow: hidden;
-            background-color: #f1f5f9;
-            height: 44px;
-            border: 1px solid transparent;
-            transition: all var(--transition-speed) ease;
+            margin: 0 16px;
         }
-        
-        .search-bar-container:focus-within {
-            background-color: var(--surface-color);
-            border-color: #cbd5e1;
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-        }
-
         .search-bar-container input {
             flex: 1;
             border: none;
-            padding: 0 20px;
+            padding: 0 8px;
             outline: none;
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-main);
             background: transparent;
-            font-family: inherit;
         }
-
         .search-bar-container button {
-            background-color: transparent;
+            background: transparent;
             border: none;
-            padding: 0 20px;
+            padding: 0 12px;
             cursor: pointer;
-            color: var(--text-muted);
+            color: #777;
+            font-size: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: color var(--transition-speed);
-        }
-        
-        .search-bar-container button:hover {
-            color: var(--primary-color);
         }
 
         .header-actions {
             display: flex;
-            gap: 28px;
+            gap: 12px;
             align-items: center;
+            flex-shrink: 0;
         }
 
-        .header-actions .action-item {
+        .action-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 8px 12px;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-main);
-            transition: all 0.2s ease;
+            color: white;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.2s;
             position: relative;
         }
-
-        .header-actions .action-item:hover {
-            color: var(--primary-color);
-            transform: translateY(-1px);
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
         }
-
-        .header-actions .action-item i {
-            font-size: 22px;
-            color: var(--text-muted);
-            transition: color 0.2s ease;
-        }
-        
-        .header-actions .action-item:hover i {
-            color: var(--primary-color);
+        .action-btn i {
+            font-size: 16px;
+            color: white;
         }
 
         .cart-badge {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
+            background: #f97316;
             color: white;
-            border-radius: 20px;
-            padding: 0 6px;
-            font-size: 11px;
-            font-weight: 600;
+            border-radius: var(--radius-pill);
+            padding: 0 4px;
+            font-size: 10px;
+            font-weight: 700;
             position: absolute;
             top: -6px;
-            right: -10px;
-            height: 18px;
-            min-width: 18px;
+            right: -6px;
+            height: 16px;
+            min-width: 16px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid var(--surface-color);
-            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
-            animation: pulse 2s infinite;
-        }
-        
-        @@keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-            70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+            border: 2px solid var(--primary-color);
         }
 
-        /* Main Layout Grid */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 28px;
-            padding: 32px 0;
-        }
-
-        /* 4. Cột trái (Sidebar Menu) */
-        .sidebar-wrapper {
-            background-color: var(--surface-color);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
-            overflow: hidden;
-            position: sticky;
-            top: 104px;
-            z-index: 900;
-            align-self: start;
+        /* Header Category Menu */
+        .header-menu-wrapper {
+            position: relative;
             display: flex;
-            flex-direction: column;
-            border: 1px solid rgba(0,0,0,0.03);
-            transition: box-shadow var(--transition-speed);
-        }
-        
-        .sidebar-wrapper:hover {
-            box-shadow: var(--shadow-md);
-        }
-
-        .sidebar-title {
-            padding: 20px 24px;
-            font-weight: 600;
-            font-size: 18px;
-            border-bottom: 1px solid #f1f5f9;
-            color: var(--text-main);
-            background-color: #fafafa;
-        }
-
-        .sidebar-menu {
-            margin: 0;
-            padding: 8px 0;
-            list-style-type: none;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar-menu li {
-            padding: 2px 12px;
-        }
-
-        .sidebar-menu li a {
-            padding: 16px 20px;
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            color: var(--text-main);
-            font-size: 16px;
-            font-weight: 500;
+            flex-shrink: 0;
+        }
+        .header-menu-btn {
+            background: rgba(255, 255, 255, 0.15);
             border-radius: 8px;
-            transition: all var(--transition-speed) ease;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: white;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.2s;
         }
-
-        .sidebar-menu li a:hover {
-            background-color: #eff6ff;
+        .header-menu-btn:hover { background: rgba(255, 255, 255, 0.25); }
+        .header-menu-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 260px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s var(--bezier-smooth);
+            z-index: 1001;
+            margin-top: 16px;
+            padding: 8px 0;
+        }
+        .header-menu-wrapper:hover .header-menu-dropdown {
+            opacity: 1;
+            visibility: visible;
+            margin-top: 8px;
+        }
+        .header-menu-dropdown ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; }
+        .header-menu-dropdown li a {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            color: var(--text-main);
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .header-menu-dropdown li a:hover {
+            background: rgba(37, 99, 235, 0.05);
             color: var(--primary-color);
-            transform: translateX(4px);
         }
-
-        .sidebar-menu li a i {
-            font-size: 14px;
-            color: #cbd5e1;
-            transition: all var(--transition-speed) ease;
+        .header-menu-dropdown li a i:first-child {
+            font-size: 16px;
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+            color: var(--text-muted);
         }
-
-        .sidebar-menu li a:hover i {
+        .header-menu-dropdown li a:hover i:first-child {
             color: var(--primary-color);
-            transform: translateX(2px);
+        }
+        .header-menu-dropdown li a i.bi-chevron-right {
+            margin-left: auto;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* 3. Main Layout Grid */
+        .main-layout {
+            padding: 24px 0 100px 0;
         }
 
         footer {
             text-align: center;
-            padding: 32px 24px;
+            padding: 60px 24px;
             color: var(--text-muted);
             font-size: 14px;
-            background-color: var(--surface-color);
-            border-top: 1px solid #e2e8f0;
-            margin-top: 60px;
+            margin-top: 40px;
+        }
+
+        @@media (max-width: 1024px) {
+            .site-header .container { gap: 16px; padding: 0 16px; }
+            .search-bar-container { display: none; }
         }
     </style>
     @await RenderSectionAsync("Styles", required: false)
-<style>* { font-family: 'Times New Roman', Times, serif !important; }</style></head>
+</head>
 <body>
     <header class="site-header">
         <div class="container">
-            <!-- Cột 1: Logo thẳng hàng với Sidebar -->
-            <div style="display: flex; align-items: center;">
-                <a href="/" class="header-logo" style="display: flex; align-items: center; gap: 12px;">
-                    <img src="~/images/logo.png" asp-append-version="true" alt="TECHBLUE" style="height: 44px; border-radius: 12px; object-fit: contain;" />
-                    <span style="font-size: 24px; font-weight: 800; color: var(--primary-color); letter-spacing: -0.5px; line-height: 1;">TECH<span style="color: #1e293b;">BLUE</span></span>
-                </a>
+            <a href="/" class="header-logo" aria-label="Home">
+                TECHBLUE
+            </a>
+
+            <div class="header-menu-wrapper">
+                <div class="header-menu-btn">
+                    <i class="bi bi-grid-fill"></i>
+                    <span>Danh mục</span>
+                    <i class="bi bi-chevron-down" style="font-size: 10px; margin-left: 2px;"></i>
+                </div>
+                <div class="header-menu-dropdown">
+                    <ul>
+                        @{
+                            var layoutCategories = _layoutContext.Categories.ToList();
+                            if (layoutCategories.Any())
+                            {
+                                foreach (var cat in layoutCategories)
+                                {
+                                    <li><a href="/Home/Index?categoryId=@cat.CategoryId"><i class="bi bi-phone"></i> @cat.CategoryName <i class="bi bi-chevron-right"></i></a></li>
+                                }
+                            }
+                            else
+                            {
+                                <li><a href="#"><i class="bi bi-phone"></i> Đang cập nhật... <i class="bi bi-chevron-right"></i></a></li>
+                            }
+                        }
+                    </ul>
+                </div>
             </div>
 
-            <!-- Cột 2: Search Bar & Actions thẳng hàng với Banner -->
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <form action="/Home/Index" method="get" class="search-bar-container" style="flex: 1; margin-right: 24px;">
-                    <input type="text" name="searchString" placeholder="Hôm nay bạn muốn tìm kiếm gì?" value="@((string)ViewData["SearchString"] ?? Context.Request.Query["searchString"])" />
-                    <button type="submit"><i class="bi bi-search" style="margin-right: 6px;"></i> Tìm kiếm</button>
-                </form>
+            <form action="/Home/Index" method="get" class="search-bar-container">
+                <button type="submit" aria-label="Tìm kiếm"><i class="bi bi-search"></i></button>
+                <input type="text" name="searchString" placeholder="Bạn muốn mua gì hôm nay?" value="@((string)ViewData["SearchString"] ?? Context.Request.Query["searchString"])" />
+            </form>
 
-                <div class="header-actions">
-
-                    
-                    @{
-                        var username = Context.Session.GetString("Username");
-                        var role = Context.Session.GetString("Role");
-                    }
-                    @if (string.IsNullOrEmpty(username))
-                    {
-                        <a href="/Account/Login" class="action-item">
-                            <i class="bi bi-person-circle"></i>
-                            <span>Đăng nhập</span>
-                        </a>
-                    }
-                    else
-                    {
-                        <a href="/Account/Profile" class="action-item">
-                            <i class="bi bi-person-circle"></i>
-                            <span>@username</span>
-                        </a>
-                        @if (role == "Admin" || role == "Employee")
-                        {
-                            <a href="/Admin/Reports" class="action-item" style="color: #ef4444;">
-                                <i class="bi bi-shield-lock"></i>
-                                <span>Quản trị</span>
-                            </a>
-                        }
-                    }
-
+            <div class="header-actions">
+                <a href="/Cart/Index" class="action-btn">
+                    <i class="bi bi-bag"></i>
+                    <span>Giỏ hàng</span>
                     @{ 
                         var _cart = Context.Session.GetString("Cart");
                         int _qty = 0;
@@ -351,33 +326,42 @@
                             } catch {}
                         }
                     }
-                    <a href="/Cart/Index" class="action-item">
-                        <i class="bi bi-cart3"></i>
-                        <span>Giỏ hàng</span>
-                        <span class="cart-badge">@_qty</span>
+                    <span class="cart-badge">@_qty</span>
+                </a>
+                @{
+                    var username = Context.Session.GetString("Username");
+                    var role = Context.Session.GetString("Role");
+                }
+                @if (string.IsNullOrEmpty(username))
+                {
+                    var currentUrl = Context.Request.Path + Context.Request.QueryString;
+                    <a href="/Account/Login?returnUrl=@System.Net.WebUtility.UrlEncode(currentUrl)" class="action-btn">
+                        <i class="bi bi-person-circle"></i>
+                        <span>Đăng nhập</span>
                     </a>
-                </div>
+                }
+                else
+                {
+                    <a href="/Account/Profile" class="action-btn">
+                        <i class="bi bi-person-circle"></i>
+                        <span>@username</span>
+                    </a>
+                    @if (role == "Admin" || role == "Employee")
+                    {
+                        <a href="/Admin/Reports" class="action-btn" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5;">
+                            <i class="bi bi-shield-lock"></i>
+                            <span>Quản trị</span>
+                        </a>
+                    }
+                }
             </div>
         </div>
     </header>
 
     @RenderBody()
 
-
     @await RenderSectionAsync("Scripts", required: false)
 
-    <!--Start of Tawk.to Script-->
-    <script type="text/javascript">
-        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-        (function(){
-        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-        s1.async=true;
-        s1.src='https://embed.tawk.to/65b35c020ff6374032c525f0/1hl1b7o5u'; // Ví dụ một tài khoản Demo
-        s1.charset='UTF-8';
-        s1.setAttribute('crossorigin','*');
-        s0.parentNode.insertBefore(s1,s0);
-        })();
-    </script>
-    <!--End of Tawk.to Script-->
+    <partial name="_ChatbotWidget" />
 </body>
 </html>

@@ -16,5 +16,20 @@ namespace TechStoreWeb.Data
         public DbSet<ProductDetail> ProductDetails { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
+        public DbSet<ChatCustomerMemory> ChatCustomerMemories { get; set; }
+        public DbSet<ChatMessageLog> ChatMessageLogs { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<ChatCustomerMemory>()
+                .Property(memory => memory.BudgetMin)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<ChatCustomerMemory>()
+                .Property(memory => memory.BudgetMax)
+                .HasColumnType("decimal(18,2)");
+        }
     }
 }

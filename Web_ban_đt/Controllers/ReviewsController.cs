@@ -20,7 +20,7 @@ namespace TechStoreWeb.Controllers
         public IActionResult Create(int productId)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null) return RedirectToAction("Login", "Account");
+            if (userId == null) return RedirectToAction("Login", "Account", new { returnUrl = $"/Reviews/Create?productId={productId}" });
 
             // Kiểm tra xem user có mua sản phẩm này và đã nhận hàng chưa
             var hasPurchased = _context.Orders
@@ -44,7 +44,7 @@ namespace TechStoreWeb.Controllers
         public IActionResult Create(Review review)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null) return RedirectToAction("Login", "Account");
+            if (userId == null) return RedirectToAction("Login", "Account", new { returnUrl = $"/Reviews/Create?productId={review.ProductId}" });
 
             var hasPurchased = _context.Orders
                 .Include(o => o.OrderDetails)

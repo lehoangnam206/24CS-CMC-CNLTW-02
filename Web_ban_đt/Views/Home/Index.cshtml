@@ -6,86 +6,164 @@
 
 @section Styles {
     <style>
-        /* Top Banner Layout */
+        .home-top-grid {
+            display: grid;
+            grid-template-columns: 240px 1fr 265px;
+            gap: 16px;
+            margin-bottom: 32px;
+            min-height: calc(100vh - 120px);
+        }
+
+        /* Sidebar Menu */
+        .home-sidebar {
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .home-sidebar ul { 
+            margin: 0; 
+            padding: 0; 
+            list-style: none; 
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .home-sidebar li {
+            flex: 1;
+            display: flex;
+        }
+        .home-sidebar li a {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            color: var(--text-main);
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        .home-sidebar li a:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+            color: var(--primary-color);
+        }
+        .home-sidebar li a i.bi-chevron-right {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .home-sidebar li a .cat-icon {
+            font-size: 16px;
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+            color: var(--text-muted);
+            transition: 0.2s;
+        }
+        .home-sidebar li a:hover .cat-icon {
+            color: var(--primary-color);
+        }
+
+
+        /* Top Banner Slider */
         .top-banner {
             background-color: var(--surface-color);
-            border-radius: 20px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-            transition: box-shadow var(--transition-speed);
-            margin-bottom: 30px;
-            border: 1px solid rgba(0,0,0,0.02);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
         }
-        
         .slide-container {
             width: 100%;
-            aspect-ratio: 2.66 / 1;
-            overflow: hidden;
-            border-radius: 20px 20px 0 0;
+            flex: 1;
+            position: relative;
+            background: var(--surface-color);
+        }
+
+        .top-banner-slider {
+            display: flex;
+            flex-direction: column;
             position: relative;
         }
 
+        .slide-container {
+            width: 100%;
+            flex: 1;
+            position: relative;
+            background: var(--surface-color);
+            height: 100%;
+        }
+
         .top-banner-slider .slide-item {
-            width: 115%;
+            width: 100%;
             height: 100%;
             position: absolute;
             top: 0;
-            left: -7.5%;
-            object-fit: fill;
+            left: 0;
+            object-fit: cover;
             display: none;
-            animation: slideFade 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fade 0.5s ease-in-out;
         }
 
         .top-banner-slider .slide-item.active { display: block; }
 
-        @@keyframes slideFade {
-            from { opacity: 0; transform: scale(1.02); }
-            to { opacity: 1; transform: scale(1); }
+        @@keyframes fade {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .slider-arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 44px;
-            height: 44px;
-            background-color: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(8px);
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.8);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            color: #1e293b;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            color: var(--text-main);
             font-size: 20px;
             z-index: 10;
-            transition: all var(--transition-speed) ease;
+            transition: all 0.2s;
             opacity: 0;
         }
         
-        .top-banner-slider:hover .slider-arrow { opacity: 1; }
-        .slider-arrow:hover { background-color: #fff; color: #4361ee; transform: translateY(-50%) scale(1.1); box-shadow: 0 8px 20px rgba(67, 97, 238, 0.2); }
-        .slider-arrow.prev { left: 20px; }
-        .slider-arrow.next { right: 20px; }
+        .top-banner:hover .slider-arrow { opacity: 1; }
+        .slider-arrow:hover { background-color: var(--surface-color); color: var(--primary-color); }
+        .slider-arrow.prev { left: 16px; }
+        .slider-arrow.next { right: 16px; }
 
         .banner-tabs {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            display: flex;
             background: var(--surface-color);
+            border-top: 1px solid rgba(0,0,0,0.05);
+            height: 60px;
         }
 
         .banner-tab-item {
-            padding: 18px 12px;
+            flex: 1;
+            padding: 8px;
             text-align: center;
             cursor: pointer;
             position: relative;
-            transition: background-color var(--transition-speed) ease;
-            border-right: 1px solid #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-right: 1px solid rgba(0,0,0,0.05);
         }
-        
         .banner-tab-item:last-child { border-right: none; }
-        .banner-tab-item:hover { background-color: #f8fafc; }
+        
+        .banner-tab-item:hover { background-color: rgba(0,0,0,0.02); }
 
         .banner-tab-item::after {
             content: '';
@@ -93,136 +171,189 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 3px;
+            height: 2px;
             background-color: transparent;
-            transition: background-color var(--transition-speed) ease;
+            transition: background-color 0.2s;
         }
 
-        .banner-tab-item.active::after { background-color: #4361ee; }
+        .banner-tab-item.active::after { background-color: var(--primary-color); }
 
         .banner-tab-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 6px;
-            transition: color var(--transition-speed) ease;
-        }
-        
-        .banner-tab-item.active .banner-tab-title { color: #4361ee; }
-
-        .banner-tab-desc {
             font-size: 13px;
-            color: #64748b;
-        }
-        
-        .banner-tab-desc.text-highlight { color: #06d6a0; font-weight: 500; }
-
-        /* Promo Banners */
-        .promo-banners {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .promo-item {
-            width: 100%;
-            aspect-ratio: 2.66 / 1;
-            border-radius: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 2px;
+            white-space: nowrap;
             overflow: hidden;
-            position: relative;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            cursor: pointer;
+            text-overflow: ellipsis;
+        }
+        .banner-tab-item.active .banner-tab-title { font-weight: 700; }
+        
+        .banner-tab-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .promo-item img {
-            width: 115%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: -7.5%;
-            object-fit: fill;
-            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        /* Right Promo Banners */
+        .right-promo-banners {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
-        
-        .promo-item:hover img { transform: scale(1.05); }
+        .right-promo-item {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            height: 100%;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .right-promo-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .right-promo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Section Heading */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .section-header h3 {
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+            font-size: 22px;
+            text-transform: uppercase;
+        }
+        .section-header-links a {
+            font-size: 14px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .section-header-links a:hover { text-decoration: underline; }
 
         /* Product List */
         .product-list {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 40px;
         }
 
+        /* Retail Product Card */
         .product-card {
-            background-color: #ffffff;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.2s ease;
             position: relative;
-            border: 1px solid #f1f5f9;
+            text-decoration: none !important;
+            border: 1px solid transparent;
         }
-
+        
         .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 35px rgba(67, 97, 238, 0.1);
-            border-color: #e0e7ff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            border-color: rgba(37, 99, 235, 0.2);
+            transform: translateY(-2px);
+            z-index: 2;
         }
 
         .product-card img {
             width: 100%;
-            height: 220px;
+            height: 160px;
             object-fit: contain;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            transition: transform 0.5s ease;
-            padding: 10px;
-            background: #f8fafc;
+            margin-bottom: 16px;
+            transition: transform 0.3s ease;
         }
         
-        .product-card:hover img { transform: scale(1.08); }
+        .product-card:hover img { transform: translateY(-4px); }
 
         .product-name {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 12px;
+            color: var(--text-main);
+            margin-bottom: 8px;
             line-height: 1.4;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            transition: color 0.2s;
-            text-align: center;
+            height: 40px;
         }
         
-        .product-card:hover .product-name { color: #4361ee; }
+        .product-card:hover .product-name { color: var(--primary-color); }
 
-        .product-price {
-            font-size: 20px;
-            font-weight: 800;
-            color: #ef4444;
+        .price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
             margin-bottom: 8px;
-            text-align: center;
         }
 
+        .product-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: #d70018; /* Classic retail red */
+        }
 
+        .product-old-price {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-decoration: line-through;
+            font-weight: 500;
+        }
+
+        /* Promo Box */
+        .promo-box {
+            background-color: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            padding: 8px;
+            margin-bottom: 12px;
+            font-size: 11px;
+            color: #4b5563;
+        }
+        .promo-box p { margin: 0; padding-left: 12px; position: relative; }
+        .promo-box p::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+        }
+
+        /* Rating Row */
+        .rating-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 12px;
+            margin-top: auto;
+        }
+        .rating-row i { color: #f59e0b; font-size: 12px; }
+        .rating-row span { font-size: 12px; color: var(--text-muted); margin-left: 4px; }
 
         .add-to-cart-btn {
-            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
-            color: #ffffff;
-            border: none;
-            padding: 14px 20px;
-            border-radius: 12px;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            padding: 8px;
+            border-radius: 4px;
             cursor: pointer;
             width: 100%;
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.25);
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -230,80 +361,106 @@
         }
 
         .add-to-cart-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+            background: var(--primary-color);
+            color: #ffffff;
         }
 
+        /* Trending */
         .trending-keywords {
-            background: #ffffff;
-            padding: 16px 24px;
-            border-radius: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
             margin-bottom: 24px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-            border: 1px solid #f1f5f9;
         }
         .trending-keywords a {
-            padding: 6px 16px;
-            background: #f8fafc;
-            border-radius: 20px;
+            padding: 6px 12px;
+            background: var(--surface-color);
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 13px;
             transition: all 0.2s;
         }
         .trending-keywords a:hover {
-            background: #e0e7ff;
-            color: #4361ee !important;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
         }
+
+        @@media (max-width: 1200px) {
+            .product-list { grid-template-columns: repeat(4, 1fr); }
+            .home-top-grid { grid-template-columns: 200px 1fr 200px; }
+        }
+        @@media (max-width: 1024px) {
+            .home-top-grid { grid-template-columns: 220px 1fr; }
+            .right-promo-banners { display: none; }
+            .product-list { grid-template-columns: repeat(3, 1fr); }
+        }
+        @@media (max-width: 768px) {
+            .home-top-grid { grid-template-columns: 1fr; }
+            .home-sidebar { display: none; }
+            .product-list { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* Breadcrumb Navigation */
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+        }
+
+        .breadcrumb-nav a {
+            color: var(--text-muted);
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .breadcrumb-nav a:hover { color: var(--primary-color); }
+        .breadcrumb-nav .separator { color: rgba(0,0,0,0.2); }
+        .breadcrumb-nav .current { color: var(--text-main); }
     </style>
 }
 
-<div class="container">
-    <div class="main-layout">
-        <!-- Sidebar -->
-        <aside class="sidebar-wrapper" style="border-radius: 20px;">
-            <div class="sidebar-title" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-bottom: 1px solid #e2e8f0; font-weight: 700;">Danh mục sản phẩm</div>
-            <ul class="sidebar-menu">
-            @if (categories != null && categories.Any())
-            {
-                foreach (var cat in categories)
+<div class="container" style="padding-top: 24px;">
+    @{
+        bool isSearchOrFilter = !string.IsNullOrEmpty(Context.Request.Query["searchString"]) || !string.IsNullOrEmpty(Context.Request.Query["categoryId"]);
+    }
+
+    @if (!isSearchOrFilter)
+    {
+        <div class="home-top-grid">
+            <!-- Sidebar Menu -->
+            <aside class="home-sidebar">
+                <ul>
+                @if (categories != null && categories.Any())
                 {
-                    <li>
-                        <a href="/Home/Index?categoryId=@cat.CategoryId">
-                            <span>@cat.CategoryName</span>
-                            <i class="bi bi-chevron-right"></i>
-                        </a>
-                    </li>
+                    foreach (var cat in categories)
+                    {
+                        <li>
+                            <a href="/Home/Index?categoryId=@cat.CategoryId">
+                                <div style="display:flex; align-items:center;"><i class="bi bi-phone cat-icon"></i><span>@cat.CategoryName</span></div><i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                    }
                 }
-            }
-            else
-            {
-                <li><a href="#"><span>Apple (iPhone)</span><i class="bi bi-chevron-right"></i></a></li>
-                <li><a href="#"><span>Samsung</span><i class="bi bi-chevron-right"></i></a></li>
-                <li><a href="#"><span>Xiaomi</span><i class="bi bi-chevron-right"></i></a></li>
-                <li><a href="#"><span>OPPO</span><i class="bi bi-chevron-right"></i></a></li>
-                <li><a href="#"><span>Vivo</span><i class="bi bi-chevron-right"></i></a></li>
-            }
-        </ul>
-    </aside>
+                else
+                {
+                    <li><a href="#"><div style="display:flex; align-items:center;"><i class="bi bi-phone cat-icon"></i><span>Đang cập nhật...</span></div><i class="bi bi-chevron-right"></i></a></li>
+                }
+                </ul>
+            </aside>
 
-    <!-- Main Content -->
-    <main>
-        @{
-            bool isSearchOrFilter = !string.IsNullOrEmpty(Context.Request.Query["searchString"]) || !string.IsNullOrEmpty(Context.Request.Query["categoryId"]);
-        }
-
-        @if (!isSearchOrFilter)
-        {
-            <!-- Trending Keywords -->
-            <div class="trending-keywords d-flex gap-3 align-items-center">
-                <strong style="color: #4361ee; font-size: 14px;"><i class="bi bi-lightning-charge-fill me-1" style="color: #f59e0b;"></i>Xu hướng:</strong>
-                <a href="#" style="color: #475569; text-decoration: none; font-size: 13px; font-weight: 500;">Galaxy S26 Ultra</a>
-                <a href="#" style="color: #475569; text-decoration: none; font-size: 13px; font-weight: 500;">iPhone 16 Pro</a>
-                <a href="#" style="color: #475569; text-decoration: none; font-size: 13px; font-weight: 500;">Xiaomi 14T</a>
-                <a href="#" style="color: #475569; text-decoration: none; font-size: 13px; font-weight: 500;">OPPO Reno 11</a>
-            </div>
-
-            <!-- Top Banner -->
+            <!-- Main Slider -->
             <div class="top-banner">
-                <div class="top-banner-slider">
+                <div class="top-banner-slider" style="flex:1;">
                     <div class="slider-arrow prev" onclick="moveSlide(-1)"><i class="bi bi-chevron-left"></i></div>
                     <div class="slide-container">
                         <img src="/images/Giao diện trang chủ/ảnh để chuyển slide/Ảnh ban đầu.png" class="slide-item active" alt="Banner 1">
@@ -315,92 +472,122 @@
                 </div>
                 <div class="banner-tabs">
                     <div class="banner-tab-item active" onclick="setSlide(0)">
-                        <div class="banner-tab-title">Xiaomi 17T Series</div>
-                        <div class="banner-tab-desc text-highlight">Bậc thầy Telephoto</div>
+                        <div class="banner-tab-title">SẮM ĐỒ CÔNG NGHỆ</div>
+                        <div class="banner-tab-desc">Ưu đãi giảm sâu</div>
                     </div>
                     <div class="banner-tab-item" onclick="setSlide(1)">
-                        <div class="banner-tab-title">HONOR 600 5G</div>
-                        <div class="banner-tab-desc">Biểu tượng nhiếp ảnh AI</div>
+                        <div class="banner-tab-title">ĐIỆN THOẠI MỚI</div>
+                        <div class="banner-tab-desc">Mở bán giá tốt</div>
                     </div>
                     <div class="banner-tab-item" onclick="setSlide(2)">
-                        <div class="banner-tab-title">Galaxy S26 Ultra</div>
-                        <div class="banner-tab-desc">Quyền năng Galaxy AI</div>
+                        <div class="banner-tab-title">GALAXY S26 ULTRA</div>
+                        <div class="banner-tab-desc">Quà tặng hấp dẫn</div>
                     </div>
                     <div class="banner-tab-item" onclick="setSlide(3)">
-                        <div class="banner-tab-title">OPPO Reno16 F 5G</div>
-                        <div class="banner-tab-desc">Chuyên gia chân dung</div>
+                        <div class="banner-tab-title">PHỤ KIỆN SALE</div>
+                        <div class="banner-tab-desc">Giảm đến 50%</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Promo Banners -->
-            <div class="promo-banners">
-                <div class="promo-item"><img src="/images/Giao diện trang chủ/ảnh để chuyển slide/Ảnh 2.png" alt="Khuyến mãi 1"></div>
-                <div class="promo-item"><img src="/images/Giao diện trang chủ/ảnh để chuyển slide/Ảnh 3.png" alt="Khuyến mãi 2"></div>
-                <div class="promo-item"><img src="/images/Giao diện trang chủ/ảnh để chuyển slide/Ảnh 4.png" alt="Khuyến mãi 3"></div>
-                <div class="promo-item"><img src="/images/Giao diện trang chủ/ảnh để chuyển slide/Ảnh 5.png" alt="Khuyến mãi 4"></div>
+            <!-- Right Promos -->
+            <div class="right-promo-banners">
+                <div class="right-promo-item"><img src="/images/Giao diện trang chủ/ảnh để chuyển slide/Ảnh 2.png" alt="Khuyến mãi 1"></div>
+                <div class="right-promo-item"><img src="/images/Giao diện trang chủ/ảnh để chuyển slide/Ảnh 3.png" alt="Khuyến mãi 2"></div>
+                <div class="right-promo-item"><img src="/images/Giao diện trang chủ/ảnh để chuyển slide/Ảnh 4.png" alt="Khuyến mãi 3"></div>
             </div>
-            
-            <div class="d-flex align-items-center mb-4">
-                <h3 style="font-weight: 800; color: #1e293b; margin: 0; font-size: 24px;">SẢN PHẨM <span style="color: #4361ee;">NỔI BẬT</span></h3>
-                <div style="flex: 1; height: 2px; background: linear-gradient(90deg, #e2e8f0 0%, transparent 100%); margin-left: 20px;"></div>
-            </div>
-        }
-        else
-        {
-            var searchStr = Context.Request.Query["searchString"];
-            var catId = Context.Request.Query["categoryId"];
-            <div class="d-flex align-items-center mb-4">
-                <h3 style="font-weight: 800; color: #1e293b; margin: 0; font-size: 24px;">
-                    @if (!string.IsNullOrEmpty(searchStr))
-                    {
-                        <text>KẾT QUẢ TÌM KIẾM: <span style="color: #4361ee;">"@searchStr"</span></text>
-                    }
-                    else
-                    {
-                        var catName = categories?.FirstOrDefault(c => c.CategoryId.ToString() == catId)?.CategoryName ?? "SẢN PHẨM";
-                        <text>DANH MỤC: <span style="color: #4361ee;">@catName.ToUpper()</span></text>
-                    }
-                </h3>
-                <div style="flex: 1; height: 2px; background: linear-gradient(90deg, #e2e8f0 0%, transparent 100%); margin-left: 20px;"></div>
-            </div>
-        }
+        </div>
+        
+        <img src="/images/Giao diện trang chủ/ảnh để chuyển slide/Ảnh 5.png" alt="Khuyến mãi ngang" style="width: 100%; height: 450px; object-fit: fill; display: block; margin: 0 auto 32px auto; border-radius:8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
 
-        <!-- Product List -->
-        <div class="product-list">
-            @if (Model != null && Model.Any())
+        <div class="section-header">
+            <h3>SẢN PHẨM NỔI BẬT</h3>
+            <div class="section-header-links">
+                <a href="#">Xem tất cả <i class="bi bi-chevron-right" style="font-size:12px;"></i></a>
+            </div>
+        </div>
+    }
+    else
+    {
+        var searchStr = Context.Request.Query["searchString"];
+        var catId = Context.Request.Query["categoryId"];
+        
+        <div class="breadcrumb-nav">
+            <a href="/">Trang chủ</a>
+            <span class="separator">/</span>
+            @if (!string.IsNullOrEmpty(searchStr))
             {
-                foreach (var item in Model)
-                {
-                    <div class="product-card">
-                        <a href="/Home/Detail/@item.ProductId">
-                            <img src="@item.ImageUrl" alt="@item.Name">
-                        </a>
-                        <a href="/Home/Detail/@item.ProductId" style="text-decoration:none;">
-                            <div class="product-name">@item.Name</div>
-                        </a>
-                        <div class="product-price">@item.Price.ToString("N0")đ</div>
-
-                        <form asp-controller="Cart" asp-action="Add" method="post" style="width: 100%; margin-top: auto;">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="id" value="@item.ProductId" />
-                            <input type="hidden" name="name" value="@item.Name" />
-                            <input type="hidden" name="price" value="@item.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
-                            <input type="hidden" name="img" value="@item.ImageUrl" />
-                            <button type="submit" class="add-to-cart-btn"><i class="bi bi-cart-plus"></i> Thêm vào giỏ</button>
-                        </form>
-                    </div>
-                }
+                <span class="current">Tìm kiếm</span>
             }
             else
             {
-                <div class="col-12 text-center py-5">
-                    <i class="bi bi-box-seam text-muted" style="font-size: 48px;"></i>
-                    <p class="mt-3 text-muted">Không tìm thấy sản phẩm nào.</p>
-                </div>
+                var catName = categories?.FirstOrDefault(c => c.CategoryId.ToString() == catId)?.CategoryName ?? "Sản phẩm";
+                <span class="current">@catName</span>
             }
         </div>
-    </main>
+
+        <div class="section-header">
+            <h3>
+                @if (!string.IsNullOrEmpty(searchStr))
+                {
+                    <text>TÌM KIẾM: <span style="color: var(--primary-color);">"@searchStr"</span></text>
+                }
+                else
+                {
+                    var catName = categories?.FirstOrDefault(c => c.CategoryId.ToString() == catId)?.CategoryName ?? "SẢN PHẨM";
+                    <text>DANH MỤC: <span style="color: var(--primary-color);">@catName.ToUpper()</span></text>
+                }
+            </h3>
+        </div>
+    }
+
+    <!-- Product List -->
+    <div class="product-list">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <div class="product-card">
+                    <a href="/Home/Detail/@item.ProductId" style="display:block; text-decoration: none;">
+                        <img src="@item.ImageUrl" alt="@item.Name">
+                        <div class="product-name">@item.Name</div>
+                        <div class="price-row">
+                            <div class="product-price">@item.Price.ToString("N0")đ</div>
+                            <div class="product-old-price">@((item.Price * 1.2m).ToString("N0"))đ</div>
+                        </div>
+                        <div class="promo-box">
+                            <p>Không phí chuyển đổi khi trả góp qua thẻ tín dụng</p>
+                        </div>
+                        <div class="rating-row">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-half"></i>
+                            <span>(12 đánh giá)</span>
+                        </div>
+                    </a>
+
+                    <form asp-controller="Cart" asp-action="Add" method="post" style="width: 100%;">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@item.ProductId" />
+                        <input type="hidden" name="name" value="@item.Name" />
+                        <input type="hidden" name="price" value="@((int)item.Price)" />
+                        <input type="hidden" name="img" value="@item.ImageUrl" />
+                        <button type="submit" class="add-to-cart-btn">
+                            <i class="bi bi-cart-plus"></i> Thêm vào giỏ
+                        </button>
+                    </form>
+                </div>
+            }
+        }
+        else
+        {
+            <div style="grid-column: 1 / -1; text-align: center; padding: 80px 0;">
+                <i class="bi bi-box" style="font-size: 48px; color: var(--text-muted); opacity: 0.3;"></i>
+                <p style="margin-top: 16px; color: var(--text-muted);">Không tìm thấy sản phẩm nào.</p>
+            </div>
+        }
     </div>
 </div>
 
@@ -437,22 +624,9 @@
             clearInterval(slideInterval);
             slideInterval = setInterval(() => {
                 moveSlide(1);
-            }, 5000); 
-        }
-
-        function syncSidebarHeight() {
-            const banner = document.querySelector('.top-banner');
-            const trending = document.querySelector('.trending-keywords');
-            const sidebar = document.querySelector('.sidebar-wrapper');
-            if (banner && sidebar && trending) {
-                const totalHeight = banner.offsetHeight + trending.offsetHeight + 24;
-                sidebar.style.height = totalHeight + 'px';
-            }
+            }, 6000); 
         }
 
         resetInterval();
-        window.addEventListener('resize', syncSidebarHeight);
-        window.addEventListener('load', syncSidebarHeight);
-        setTimeout(syncSidebarHeight, 500);
     </script>
 }

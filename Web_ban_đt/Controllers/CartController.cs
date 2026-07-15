@@ -30,16 +30,26 @@ namespace TechStoreWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Add(string? id, string? name, decimal price, string? img, int qty = 1)
+        public IActionResult Add(string? id, string? name, decimal price, string? img, int qty = 1, bool isBuyNow = false)
         {
             if (string.IsNullOrEmpty(id)) return RedirectToAction("Index", "Home");
             if (qty < 1) qty = 1;
 
             var cart = HttpContext.Session.GetObject<List<CartItem>>(SESSION_CART) ?? new List<CartItem>();
+            
+            if (isBuyNow)
+            {
+                foreach (var item in cart)
+                {
+                    item.Selected = false;
+                }
+            }
+
             var existing = cart.FirstOrDefault(c => c.Id == id);
             if (existing != null)
             {
                 existing.Qty += qty;
+                existing.Selected = true;
             }
             else
             {
@@ -110,7 +120,7 @@ namespace TechStoreWeb.Controllers
         public IActionResult Checkout()
         {
             var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null) return RedirectToAction("Login", "Account");
+            if (userId == null) return RedirectToAction("Login", "Account", new { returnUrl = "/Cart/Checkout" });
 
             var cart = HttpContext.Session.GetObject<List<CartItem>>(SESSION_CART) ?? new List<CartItem>();
             var selectedItems = cart.Where(c => c.Selected).ToList();
@@ -128,7 +138,7 @@ namespace TechStoreWeb.Controllers
         public IActionResult Checkout(string shippingAddress, string paymentMethod)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null) return RedirectToAction("Login", "Account");
+            if (userId == null) return RedirectToAction("Login", "Account", new { returnUrl = "/Cart/Checkout" });
 
             var cart = HttpContext.Session.GetObject<List<CartItem>>(SESSION_CART) ?? new List<CartItem>();
             var selectedItems = cart.Where(c => c.Selected).ToList();

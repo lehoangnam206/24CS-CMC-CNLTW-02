@@ -99,10 +99,10 @@ namespace TechStoreWeb.Controllers
         public async Task<IActionResult> AddReview(int productId, int rating, string comment)
         {
             var username = HttpContext.Session.GetString("Username");
-            if (string.IsNullOrEmpty(username)) return RedirectToAction("Login", "Account");
+            if (string.IsNullOrEmpty(username)) return RedirectToAction("Login", "Account", new { returnUrl = $"/Home/Detail/{productId}" });
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
-            if (user == null) return RedirectToAction("Login", "Account");
+            if (user == null) return RedirectToAction("Login", "Account", new { returnUrl = $"/Home/Detail/{productId}" });
 
             bool canReview = await _context.Orders
                 .AnyAsync(o => o.UserId == user.UserId && o.OrderDetails.Any(od => od.ProductId == productId));
