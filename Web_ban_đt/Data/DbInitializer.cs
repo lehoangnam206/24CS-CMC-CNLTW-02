@@ -11,7 +11,11 @@ namespace TechStoreWeb.Data
 {
     public static class DbInitializer
     {
-        public static void Initialize(AppDbContext context, IWebHostEnvironment env)
+        /// <param name="seedAdminPassword">
+        /// Mật khẩu cho tài khoản admin khởi tạo. Truyền từ cấu hình (appsettings.Production.json
+        /// hoặc biến môi trường SEED_ADMIN_PASSWORD) để không phải dùng mật khẩu mặc định.
+        /// </param>
+        public static void Initialize(AppDbContext context, IWebHostEnvironment env, string? seedAdminPassword = null)
         {
             // Ensure database and tables exist (does NOT delete existing data)
             context.Database.EnsureCreated();
@@ -19,7 +23,9 @@ namespace TechStoreWeb.Data
             // Seed default Admin user if none exists
             if (!context.Users.Any(u => u.Role == "Admin"))
             {
-                var seedPassword = Environment.GetEnvironmentVariable("SEED_ADMIN_PASSWORD") ?? "adminpassword";
+                var seedPassword = !string.IsNullOrWhiteSpace(seedAdminPassword)
+                    ? seedAdminPassword
+                    : Environment.GetEnvironmentVariable("SEED_ADMIN_PASSWORD") ?? "adminpassword";
                 context.Users.Add(new User
                 {
                     Username = "admin",

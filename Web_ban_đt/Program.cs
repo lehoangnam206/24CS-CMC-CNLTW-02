@@ -86,7 +86,7 @@ using (var scope = app.Services.CreateScope())
         ChatbotDatabaseInitializer.EnsureCreated(context);
         PromotionDatabaseInitializer.EnsureCreated(context);
 
-        TechStoreWeb.Data.DbInitializer.Initialize(context, env);
+        TechStoreWeb.Data.DbInitializer.Initialize(context, env, builder.Configuration["SeedAdminPassword"]);
 
         // Áp/gỡ giá khuyến mại ngay lúc khởi động theo ngày hiệu lực.
         services.GetRequiredService<IPromotionService>().SyncAsync().GetAwaiter().GetResult();

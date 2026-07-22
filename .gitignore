@@ -367,3 +367,8 @@ FodyWeavers.xsd
 # File cau hinh production chua secret - khong commit
 appsettings.Production.json
 appsettings.*.Production.json
+
+# Goi deploy
+deploy-techblue/
+deploy-techblue.zip
+publish/
