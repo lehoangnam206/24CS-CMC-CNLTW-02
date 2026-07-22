@@ -258,17 +258,163 @@
             padding: 24px 0 100px 0;
         }
 
-        footer {
-            text-align: center;
-            padding: 60px 24px;
-            color: var(--text-muted);
+        /* ---------- Footer ---------- */
+        .site-footer {
+            margin-top: 48px;
+            background: #f4f6fb;
+            border-top: 1px solid rgba(37, 99, 235, 0.12);
+            color: var(--text-main);
             font-size: 14px;
-            margin-top: 40px;
         }
+
+        .footer-main {
+            display: grid;
+            grid-template-columns: 1.15fr 1fr 1fr 1fr;
+            gap: 40px;
+            padding: 48px 0 40px 0;
+        }
+
+        .footer-col h4 {
+            font-size: 15px;
+            font-weight: 700;
+            margin: 0 0 16px 0;
+            color: var(--text-main);
+        }
+
+        .footer-col h4:not(:first-child) { margin-top: 28px; }
+
+        .footer-links { list-style: none; margin: 0; padding: 0; }
+        .footer-links li { margin-bottom: 10px; }
+        .footer-links a {
+            color: #4b5563;
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        .footer-links a:hover { color: var(--primary-color); text-decoration: underline; }
+
+        .footer-hotline { margin-bottom: 10px; color: #4b5563; line-height: 1.6; }
+        .footer-hotline strong { color: var(--primary-color); font-weight: 700; }
+
+        .footer-pay {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .footer-pay span {
+            background: #fff;
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            color: #374151;
+        }
+
+        .footer-social { display: flex; flex-wrap: wrap; gap: 10px; }
+        .footer-social a {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-color);
+            color: #fff;
+            font-size: 17px;
+            text-decoration: none;
+            transition: transform 0.15s, background 0.15s;
+        }
+        .footer-social a:hover { transform: translateY(-2px); background: var(--primary-hover); }
+
+        /* Đăng ký nhận tin */
+        .footer-subscribe {
+            background: #fff;
+            border: 1px solid rgba(37, 99, 235, 0.18);
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 8px;
+        }
+        .footer-subscribe p {
+            margin: 0 0 12px 0;
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+        .footer-subscribe input {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid rgba(0,0,0,0.12);
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 10px;
+            font-family: inherit;
+        }
+        .footer-subscribe input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .footer-subscribe button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary-color);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.15s;
+        }
+        .footer-subscribe button:hover { background: var(--primary-hover); }
+        .footer-subscribe .form-note {
+            margin: 10px 0 0 0;
+            font-size: 12px;
+            color: var(--primary-color);
+            display: none;
+        }
+
+        /* Dải từ khoá */
+        .footer-tags {
+            border-top: 1px solid rgba(0,0,0,0.07);
+            padding: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 0;
+            font-size: 13px;
+        }
+        .footer-tags a {
+            color: #4b5563;
+            text-decoration: none;
+            padding: 0 12px;
+            border-right: 1px solid rgba(0,0,0,0.15);
+            line-height: 1.2;
+        }
+        .footer-tags a:first-child { padding-left: 0; }
+        .footer-tags a:last-child { border-right: none; }
+        .footer-tags a:hover { color: var(--primary-color); }
+
+        /* Dòng pháp lý */
+        .footer-legal {
+            background: #0b2a6f;
+            color: rgba(255,255,255,0.72);
+            font-size: 12.5px;
+            line-height: 1.7;
+            text-align: center;
+            padding: 20px 24px;
+        }
+        .footer-legal strong { color: #fff; font-weight: 600; }
 
         @@media (max-width: 1024px) {
             .site-header .container { gap: 16px; padding: 0 16px; }
             .search-bar-container { display: none; }
+            .footer-main { grid-template-columns: 1fr 1fr; gap: 32px; }
+        }
+
+        @@media (max-width: 640px) {
+            .footer-main { grid-template-columns: 1fr; padding: 32px 0; }
+            .footer-tags { justify-content: center; }
         }
     </style>
     @await RenderSectionAsync("Styles", required: false)
@@ -360,7 +506,121 @@
 
     @RenderBody()
 
+    @* TODO: thay các mục [trong ngoặc vuông] bằng thông tin thật của cửa hàng *@
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-main">
+
+                <div class="footer-col">
+                    <h4>Tổng đài hỗ trợ</h4>
+                    <div class="footer-hotline">
+                        Mua hàng &amp; bảo hành <strong>[1900 xxxx]</strong><br>
+                        <span style="color:var(--text-muted); font-size:13px;">7h30 – 22h00 tất cả các ngày</span>
+                    </div>
+                    <div class="footer-hotline">
+                        Khiếu nại &amp; góp ý <strong>[1900 xxxx]</strong><br>
+                        <span style="color:var(--text-muted); font-size:13px;">8h00 – 21h30</span>
+                    </div>
+
+                    <h4>Phương thức thanh toán</h4>
+                    <div class="footer-pay">
+                        <span>COD</span>
+                        <span>VNPAY</span>
+                        <span>MOMO</span>
+                        <span>ZALOPAY</span>
+                        <span>THẺ ATM</span>
+                        <span>TRẢ GÓP 0%</span>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Thông tin và chính sách</h4>
+                    <ul class="footer-links">
+                        <li><a href="/Cart">Mua hàng và thanh toán online</a></li>
+                        <li><a href="#">Chính sách trả góp</a></li>
+                        <li><a href="#">Chính sách giao hàng</a></li>
+                        <li><a href="#">Chính sách đổi trả</a></li>
+                        <li><a href="#">Chính sách bảo hành</a></li>
+                        <li><a href="#">Tra cứu thông tin bảo hành</a></li>
+                        <li><a href="#">Tra cứu hoá đơn điện tử</a></li>
+                        <li><a href="/Home/Privacy">Chính sách bảo mật thông tin</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Dịch vụ và hỗ trợ</h4>
+                    <ul class="footer-links">
+                        <li><a href="/Account/Orders">Tra cứu đơn hàng</a></li>
+                        <li><a href="/Account/Profile">Tài khoản của tôi</a></li>
+                        <li><a href="#">Khách hàng doanh nghiệp</a></li>
+                        <li><a href="#">Ưu đãi thanh toán</a></li>
+                        <li><a href="#">Quy chế hoạt động</a></li>
+                        <li><a href="#">Liên hệ hợp tác kinh doanh</a></li>
+                        <li><a href="#">Tuyển dụng</a></li>
+                        <li><a href="#">Dịch vụ bảo hành mở rộng</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Kết nối với TECHBLUE</h4>
+                    <div class="footer-social">
+                        <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                        <a href="#" aria-label="TikTok"><i class="bi bi-tiktok"></i></a>
+                        <a href="#" aria-label="Zalo"><i class="bi bi-chat-dots-fill"></i></a>
+                    </div>
+
+                    <h4>Đăng ký nhận khuyến mãi</h4>
+                    <div class="footer-subscribe">
+                        <p>Nhận thông tin ưu đãi và sản phẩm mới sớm nhất từ TECHBLUE.</p>
+                        <form id="footerSubscribeForm" onsubmit="return false;">
+                            <input type="email" id="footerSubscribeEmail" placeholder="Nhập email của bạn" aria-label="Email nhận tin" required>
+                            <button type="submit">ĐĂNG KÝ NGAY</button>
+                            <p class="form-note" id="footerSubscribeNote">Tính năng đang được hoàn thiện, bạn quay lại sau nhé!</p>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="footer-tags">
+                <a href="/Home/Index">Điện thoại</a>
+                <a href="/Home/Index">iPhone</a>
+                <a href="/Home/Index">Samsung</a>
+                <a href="/Home/Index">Xiaomi</a>
+                <a href="/Home/Index">OPPO</a>
+                <a href="/Home/Index">Honor</a>
+                <a href="/Home/Index">Huawei</a>
+                <a href="/Home/Index">Nokia</a>
+                <a href="/Home/Index">Tecno</a>
+                <a href="/Home/Index">Phụ kiện</a>
+                <a href="/Home/Index">Trả góp 0%</a>
+                <a href="/Home/Index">Hàng mới về</a>
+            </div>
+        </div>
+
+        <div class="footer-legal">
+            <strong>[Tên công ty đầy đủ]</strong> — GPĐKKD: [số giấy phép] cấp tại [nơi cấp].<br>
+            Địa chỉ: [địa chỉ trụ sở] — Điện thoại: [số điện thoại] — Email: [email liên hệ]<br>
+            © @DateTime.Now.Year TECHBLUE. Bảo lưu mọi quyền.
+        </div>
+    </footer>
+
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        // Form đăng ký nhận tin chưa có backend: báo rõ cho khách thay vì im lặng không làm gì.
+        (function () {
+            const form = document.getElementById('footerSubscribeForm');
+            if (!form) return;
+            form.addEventListener('submit', function () {
+                const email = document.getElementById('footerSubscribeEmail');
+                if (!email.value.trim()) return;
+                document.getElementById('footerSubscribeNote').style.display = 'block';
+            });
+        })();
+    </script>
 
     <partial name="_ChatbotWidget" />
 </body>

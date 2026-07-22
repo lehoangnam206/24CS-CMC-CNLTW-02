@@ -19,10 +19,11 @@ namespace TechStoreWeb.Data
             // Seed default Admin user if none exists
             if (!context.Users.Any(u => u.Role == "Admin"))
             {
+                var seedPassword = Environment.GetEnvironmentVariable("SEED_ADMIN_PASSWORD") ?? "adminpassword";
                 context.Users.Add(new User
                 {
                     Username = "admin",
-                    Password = "adminpassword", // In production, this should be hashed
+                    Password = new Services.PasswordHasher().Hash(seedPassword),
                     FullName = "Administrator",
                     Email = "admin@techstore.com",
                     PhoneNumber = "0123456789",

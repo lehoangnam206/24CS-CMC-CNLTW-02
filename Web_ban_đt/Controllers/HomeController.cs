@@ -14,7 +14,9 @@ namespace TechStoreWeb.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(int? categoryId, string searchString)
+        private const int PageSize = 20;
+
+        public async Task<IActionResult> Index(int? categoryId, string searchString, int page = 1)
         {
             // Lấy danh sách hãng điện thoại kèm sản phẩm để đưa ra Menu bên trái và menu bay
             ViewBag.Categories = await _context.Categories.Include(c => c.Products).ToListAsync();
@@ -36,7 +38,22 @@ namespace TechStoreWeb.Controllers
                 ViewData["SearchString"] = s;
             }
 
-            var products = await productsQuery.ToListAsync();
+            var totalItems = await productsQuery.CountAsync();
+            var totalPages = totalItems == 0 ? 1 : (int)Math.Ceiling(totalItems / (double)PageSize);
+            if (page < 1) page = 1;
+            if (page > totalPages) page = totalPages;
+
+            var products = await productsQuery
+                .OrderBy(p => p.ProductId)
+                .Skip((page - 1) * PageSize)
+                .Take(PageSize)
+                .ToListAsync();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.CategoryId = categoryId;
+
             return View(products);
         }
 
@@ -70,15 +87,17 @@ namespace TechStoreWeb.Controllers
                 .ToListAsync();
 
             bool canReview = false;
-            var username = HttpContext.Session.GetString("Username");
-            if (!string.IsNullOrEmpty(username))
+            var sessionUserId = HttpContext.Session.GetInt32("UserId");
+            if (sessionUserId != null)
             {
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+                var user = await _context.Users.FindAsync(sessionUserId.Value);
                 if (user != null)
                 {
                     // Kiá»ƒm tra xem user Ä‘Ã£ tá»«ng mua sáº£n pháº©m nÃ y chÆ°a
                     canReview = await _context.Orders
-                        .AnyAsync(o => o.UserId == user.UserId && o.OrderDetails.Any(od => od.ProductId == product.ProductId));
+                        .AnyAsync(o => o.UserId == user.UserId
+                                    && o.Status == "Delivered"
+                                    && o.OrderDetails.Any(od => od.ProductId == product.ProductId));
                 }
             }
 
@@ -98,14 +117,22 @@ namespace TechStoreWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddReview(int productId, int rating, string comment)
         {
-            var username = HttpContext.Session.GetString("Username");
-            if (string.IsNullOrEmpty(username)) return RedirectToAction("Login", "Account", new { returnUrl = $"/Home/Detail/{productId}" });
+            var sessionUserId = HttpContext.Session.GetInt32("UserId");
+            if (sessionUserId == null) return RedirectToAction("Login", "Account", new { returnUrl = $"/Home/Detail/{productId}" });
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            var user = await _context.Users.FindAsync(sessionUserId.Value);
             if (user == null) return RedirectToAction("Login", "Account", new { returnUrl = $"/Home/Detail/{productId}" });
 
+            if (rating < 1 || rating > 5)
+            {
+                TempData["ErrorMessage"] = "Số sao đánh giá không hợp lệ.";
+                return RedirectToAction("Detail", new { id = productId });
+            }
+
             bool canReview = await _context.Orders
-                .AnyAsync(o => o.UserId == user.UserId && o.OrderDetails.Any(od => od.ProductId == productId));
+                .AnyAsync(o => o.UserId == user.UserId
+                            && o.Status == "Delivered"
+                            && o.OrderDetails.Any(od => od.ProductId == productId));
 
             if (canReview)
             {

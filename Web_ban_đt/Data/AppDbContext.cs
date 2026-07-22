@@ -16,6 +16,7 @@ namespace TechStoreWeb.Data
         public DbSet<ProductDetail> ProductDetails { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
+        public DbSet<PromotionProduct> PromotionProducts { get; set; }
         public DbSet<ChatCustomerMemory> ChatCustomerMemories { get; set; }
         public DbSet<ChatMessageLog> ChatMessageLogs { get; set; }
 
@@ -30,6 +31,23 @@ namespace TechStoreWeb.Data
             modelBuilder.Entity<ChatCustomerMemory>()
                 .Property(memory => memory.BudgetMax)
                 .HasColumnType("decimal(18,2)");
+
+            // Mỗi sản phẩm chỉ xuất hiện một lần trong cùng một chương trình khuyến mại.
+            modelBuilder.Entity<PromotionProduct>()
+                .HasIndex(pp => new { pp.PromotionId, pp.ProductId })
+                .IsUnique();
+
+            modelBuilder.Entity<PromotionProduct>()
+                .HasOne(pp => pp.Promotion)
+                .WithMany()
+                .HasForeignKey(pp => pp.PromotionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<PromotionProduct>()
+                .HasOne(pp => pp.Product)
+                .WithMany()
+                .HasForeignKey(pp => pp.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

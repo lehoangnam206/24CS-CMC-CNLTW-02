@@ -8,7 +8,12 @@ namespace TechStoreWeb.Services
 {
     public interface IChatbotRagService
     {
-        Task<IReadOnlyList<RetrievedChatChunk>> RetrieveAsync(string query, int limit, CancellationToken cancellationToken);
+        Task<IReadOnlyList<RetrievedChatChunk>> RetrieveAsync(
+            string query,
+            int limit,
+            decimal? budgetMin,
+            decimal? budgetMax,
+            CancellationToken cancellationToken);
     }
 
     public class ChatbotRagService : IChatbotRagService
@@ -25,7 +30,12 @@ namespace TechStoreWeb.Services
             _logger = logger;
         }
 
-        public async Task<IReadOnlyList<RetrievedChatChunk>> RetrieveAsync(string query, int limit, CancellationToken cancellationToken)
+        public async Task<IReadOnlyList<RetrievedChatChunk>> RetrieveAsync(
+            string query,
+            int limit,
+            decimal? budgetMin,
+            decimal? budgetMax,
+            CancellationToken cancellationToken)
         {
             var chunks = await GetChunksAsync(cancellationToken);
             var queryTerms = Tokenize(query).ToList();
@@ -35,7 +45,7 @@ namespace TechStoreWeb.Services
                 .Select(chunk => new RetrievedChatChunk
                 {
                     Chunk = chunk,
-                    Score = Score(chunk, queryTerms, queryNorm)
+                    Score = Score(chunk, queryTerms, queryNorm) + BudgetScore(chunk, budgetMin, budgetMax)
                 })
                 .Where(result => result.Score > 0)
                 .OrderByDescending(result => result.Score)
@@ -43,7 +53,51 @@ namespace TechStoreWeb.Services
                 .Take(Math.Max(1, limit))
                 .ToList();
 
+            // Khách nêu ngân sách nhưng câu hỏi quá chung chung nên không khớp từ khoá nào:
+            // vẫn gợi ý được máy trong tầm giá thay vì trả về rỗng.
+            if (results.Count == 0 && (budgetMin.HasValue || budgetMax.HasValue))
+            {
+                results = chunks
+                    .Where(chunk => chunk.Kind == ChatChunkKind.ProductSpecs && IsWithinBudget(chunk.Price, budgetMin, budgetMax))
+                    .OrderByDescending(chunk => chunk.Price)
+                    .Take(Math.Max(1, limit))
+                    .Select(chunk => new RetrievedChatChunk { Chunk = chunk, Score = 1 })
+                    .ToList();
+            }
+
             return results;
+        }
+
+        private static bool IsWithinBudget(decimal? price, decimal? budgetMin, decimal? budgetMax)
+        {
+            if (!price.HasValue) return false;
+            if (budgetMin.HasValue && price.Value < budgetMin.Value) return false;
+            if (budgetMax.HasValue && price.Value > budgetMax.Value) return false;
+            return true;
+        }
+
+        /// <summary>
+        /// Ưu tiên máy nằm trong tầm giá khách nêu, hạ điểm máy vượt ngân sách quá xa.
+        /// </summary>
+        private static double BudgetScore(ChatDocumentChunk chunk, decimal? budgetMin, decimal? budgetMax)
+        {
+            if (!chunk.Price.HasValue || (!budgetMin.HasValue && !budgetMax.HasValue))
+            {
+                return 0;
+            }
+
+            if (IsWithinBudget(chunk.Price, budgetMin, budgetMax))
+            {
+                return 6;
+            }
+
+            if (budgetMax.HasValue && chunk.Price.Value > budgetMax.Value)
+            {
+                var overshoot = (double)((chunk.Price.Value - budgetMax.Value) / budgetMax.Value);
+                return overshoot > 0.5 ? -6 : -2;
+            }
+
+            return -1;
         }
 
         private async Task<IReadOnlyList<ChatDocumentChunk>> GetChunksAsync(CancellationToken cancellationToken)
@@ -121,6 +175,7 @@ namespace TechStoreWeb.Services
                 ProductName = product.Name,
                 Brand = brand,
                 Topic = "specs",
+                Price = product.Price,
                 Title = $"Thong so {product.Name}",
                 Content = table.ToString(),
                 ParentContent = table.ToString()
@@ -324,9 +379,14 @@ namespace TechStoreWeb.Services
             return matches.Select(match => int.TryParse(match.Value, out var value) ? value : 0).DefaultIfEmpty(0).Sum();
         }
 
+        /// <summary>
+        /// Chỉ loại các hư từ thật sự vô nghĩa. Trước đây danh sách này chứa "gia", "man", "pin"-liên quan
+        /// và "tam" nên câu hỏi về giá bị mất luôn từ khoá quan trọng nhất.
+        /// </summary>
         private static readonly HashSet<string> StopWords = new()
         {
-            "toi", "minh", "ban", "cho", "can", "nen", "mua", "may", "dien", "thoai", "la", "va", "co", "khong", "voi", "de", "tu", "van", "giup", "gia", "tam"
+            "toi", "minh", "ban", "cho", "can", "nen", "mua", "la", "va", "co", "khong",
+            "voi", "de", "tu", "giup", "the", "nao", "gi", "duoc", "roi", "nhe", "nha", "vay"
         };
     }
 }

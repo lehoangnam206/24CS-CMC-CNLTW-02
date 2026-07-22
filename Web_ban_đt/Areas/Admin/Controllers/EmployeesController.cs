@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TechStoreWeb.Data;
 using Microsoft.AspNetCore.Http;
 using TechStoreWeb.Models;
+using TechStoreWeb.Services;
 
 namespace TechStoreWeb.Areas.Admin.Controllers
 {
@@ -12,10 +13,12 @@ namespace TechStoreWeb.Areas.Admin.Controllers
     public class EmployeesController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public EmployeesController(AppDbContext context)
+        public EmployeesController(AppDbContext context, IPasswordHasher passwordHasher)
         {
             _context = context;
+            _passwordHasher = passwordHasher;
         }
 
         private bool IsAdmin()
@@ -76,6 +79,7 @@ namespace TechStoreWeb.Areas.Admin.Controllers
 
                 employee.IsLocked = false;
                 employee.LoginProvider = "Local";
+                employee.Password = _passwordHasher.Hash(employee.Password!);
                 _context.Users.Add(employee);
                 await _context.SaveChangesAsync();
                 TempData["SuccessMessage"] = "Thêm nhân viên thành công!";
@@ -129,7 +133,7 @@ namespace TechStoreWeb.Areas.Admin.Controllers
 
                 if (!string.IsNullOrEmpty(NewPassword))
                 {
-                    employee.Password = NewPassword;
+                    employee.Password = _passwordHasher.Hash(NewPassword);
                 }
 
                 _context.Update(employee);

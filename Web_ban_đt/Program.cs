@@ -12,6 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // 1. Thêm dịch vụ MVC (Model-View-Controller)
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<IPromotionService, PromotionService>();
+builder.Services.AddHostedService<PromotionExpiryWorker>();
 builder.Services.Configure<ChatbotOptions>(builder.Configuration.GetSection("Chatbot"));
 builder.Services.AddScoped<IChatbotRagService, ChatbotRagService>();
 builder.Services.AddScoped<IChatbotService, ChatbotService>();
@@ -81,8 +84,12 @@ using (var scope = app.Services.CreateScope())
         // Ensure database is created
         context.Database.EnsureCreated();
         ChatbotDatabaseInitializer.EnsureCreated(context);
+        PromotionDatabaseInitializer.EnsureCreated(context);
 
         TechStoreWeb.Data.DbInitializer.Initialize(context, env);
+
+        // Áp/gỡ giá khuyến mại ngay lúc khởi động theo ngày hiệu lực.
+        services.GetRequiredService<IPromotionService>().SyncAsync().GetAwaiter().GetResult();
     }
     catch (Exception ex)
     {

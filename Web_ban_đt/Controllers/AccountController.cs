@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using TechStoreWeb.Data;
 using TechStoreWeb.Models;
+using TechStoreWeb.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -13,10 +14,12 @@ namespace TechStoreWeb.Controllers
     public class AccountController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public AccountController(AppDbContext context)
+        public AccountController(AppDbContext context, IPasswordHasher passwordHasher)
         {
             _context = context;
+            _passwordHasher = passwordHasher;
         }
 
         // UC01: Đăng ký
@@ -37,6 +40,15 @@ namespace TechStoreWeb.Controllers
             ModelState.Remove("ProviderKey");
             ModelState.Remove("Username");
 
+            if (string.IsNullOrWhiteSpace(user.Password))
+            {
+                ModelState.AddModelError("", "Vui lòng nhập mật khẩu.");
+            }
+            else if (user.Password.Length < 6)
+            {
+                ModelState.AddModelError("", "Mật khẩu phải có ít nhất 6 ký tự.");
+            }
+
             if (user.Password != ConfirmPassword)
             {
                 ModelState.AddModelError("", "Mật khẩu xác nhận không khớp.");
@@ -55,6 +67,7 @@ namespace TechStoreWeb.Controllers
                 user.Role = "Customer";
                 user.IsLocked = false;
                 user.LoginProvider = "Local";
+                user.Password = _passwordHasher.Hash(user.Password!);
                 _context.Users.Add(user);
                 _context.SaveChanges();
 
@@ -85,16 +98,26 @@ namespace TechStoreWeb.Controllers
 
             // Hỗ trợ đăng nhập bằng email hoặc username
             var user = _context.Users.FirstOrDefault(u =>
-                (u.Username == username || u.Email == username) && 
-                u.Password == password &&
+                (u.Username == username || u.Email == username) &&
                 u.LoginProvider == "Local");
 
-            if (user != null)
+            var verification = user == null
+                ? PasswordVerificationResult.Failed
+                : _passwordHasher.Verify(user.Password, password);
+
+            if (user != null && verification != PasswordVerificationResult.Failed)
             {
                 if (user.IsLocked)
                 {
                     ModelState.AddModelError("", "Tài khoản của bạn đã bị khóa.");
                     return View();
+                }
+
+                // Mật khẩu cũ còn lưu plaintext: băm lại ngay khi đăng nhập thành công.
+                if (verification == PasswordVerificationResult.SuccessNeedsUpgrade)
+                {
+                    user.Password = _passwordHasher.Hash(password);
+                    _context.SaveChanges();
                 }
 
                 // Set session
@@ -261,7 +284,13 @@ namespace TechStoreWeb.Controllers
                     // Nếu có đổi mật khẩu
                     if (!string.IsNullOrEmpty(updatedUser.Password))
                     {
-                        user.Password = updatedUser.Password;
+                        if (updatedUser.Password.Length < 6)
+                        {
+                            ModelState.AddModelError("", "Mật khẩu phải có ít nhất 6 ký tự.");
+                            return View(updatedUser);
+                        }
+
+                        user.Password = _passwordHasher.Hash(updatedUser.Password);
                     }
 
                     _context.SaveChanges();

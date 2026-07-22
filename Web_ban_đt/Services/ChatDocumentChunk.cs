@@ -19,6 +19,9 @@ namespace TechStoreWeb.Services
         public string ProductName { get; set; } = string.Empty;
         public string Brand { get; set; } = string.Empty;
         public string Topic { get; set; } = string.Empty;
+
+        /// <summary>Giá bán hiện tại, dùng để chấm điểm theo ngân sách khách nêu.</summary>
+        public decimal? Price { get; set; }
     }
 
     public class RetrievedChatChunk

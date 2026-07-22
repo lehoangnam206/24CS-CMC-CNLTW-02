@@ -398,9 +398,9 @@
                                 @foreach (var variant in Model.Variants)
                                 {
                                     var variantPrice = variant.Price ?? Model.Product.Price;
-                                    <div class="variant-btn" 
+                                    <div class="variant-btn"
+                                         data-variant-id="@variant.VariantId"
                                          data-price="@variantPrice"
-                                         data-name="@($"{Model.Product.Name} - {variant.Color} {variant.ROM}")"
                                          onclick="selectVariant(this)">
                                         <div class="variant-title">@variant.Color @variant.ROM</div>
                                         <div class="variant-price">@variantPrice.ToString("N0")đ</div>
@@ -422,10 +422,8 @@
                     <div class="detail-actions">
                         <form asp-controller="Cart" asp-action="Add" method="post" style="flex: 1; display: flex; gap: 16px;" id="addToCartForm">
                             @Html.AntiForgeryToken()
-                            <input type="hidden" name="id" value="@Model.Product.ProductId" />
-                            <input type="hidden" name="name" id="hiddenName" value="@Model.Product.Name" />
-                            <input type="hidden" name="price" id="hiddenPrice" value="@((int)Model.Product.Price)" />
-                            <input type="hidden" name="img" value="@Model.Product.ImageUrl" />
+                            <input type="hidden" name="productId" value="@Model.Product.ProductId" />
+                            <input type="hidden" name="variantId" id="hiddenVariantId" value="" />
                             <input type="hidden" name="qty" id="hiddenQty" value="1" />
 
                             <button type="submit" class="detail-btn-buy" name="action" value="buy">
@@ -651,8 +649,8 @@
             const price = parseFloat(element.getAttribute('data-price'));
             document.getElementById('displayPrice').innerText = new Intl.NumberFormat('vi-VN').format(price) + 'đ';
 
-            document.getElementById('hiddenPrice').value = price;
-            document.getElementById('hiddenName').value = element.getAttribute('data-name');
+            // Chỉ gửi VariantId lên server; giá và tên do server tự tra từ DB.
+            document.getElementById('hiddenVariantId').value = element.getAttribute('data-variant-id');
         }
 
         function changeQty(delta) {

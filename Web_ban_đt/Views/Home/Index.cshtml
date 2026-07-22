@@ -11,7 +11,7 @@
             grid-template-columns: 240px 1fr 265px;
             gap: 16px;
             margin-bottom: 32px;
-            min-height: calc(100vh - 120px);
+            min-height: 420px;
         }
 
         /* Sidebar Menu */
@@ -106,12 +106,154 @@
             position: absolute;
             top: 0;
             left: 0;
-            object-fit: cover;
             display: none;
             animation: fade 0.5s ease-in-out;
+            overflow: hidden;
+            padding: 44px 56px;
+            color: #fff;
         }
 
-        .top-banner-slider .slide-item.active { display: block; }
+        .top-banner-slider .slide-item.active { display: flex; align-items: center; }
+
+        /* Nền gradient xanh TECHBLUE cho từng slide */
+        .slide-item.theme-deep   { background: linear-gradient(115deg, #0b2a6f 0%, #1746b3 48%, #2563eb 100%); }
+        .slide-item.theme-bright { background: linear-gradient(115deg, #1d4ed8 0%, #2563eb 45%, #38bdf8 100%); }
+        .slide-item.theme-night  { background: linear-gradient(115deg, #0a1a3c 0%, #123a86 55%, #1d4ed8 100%); }
+        .slide-item.theme-sky    { background: linear-gradient(115deg, #1e40af 0%, #2f6fe4 50%, #7dd3fc 100%); }
+
+        /* Vệt sáng + lưới trang trí */
+        .slide-item::before {
+            content: '';
+            position: absolute;
+            right: -80px;
+            top: -120px;
+            width: 520px;
+            height: 520px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 65%);
+            pointer-events: none;
+        }
+        .slide-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 48px 48px;
+            mask-image: linear-gradient(100deg, rgba(0,0,0,0.55), transparent 70%);
+            -webkit-mask-image: linear-gradient(100deg, rgba(0,0,0,0.55), transparent 70%);
+            pointer-events: none;
+        }
+
+        .slide-copy { position: relative; z-index: 2; max-width: 60%; }
+
+        .slide-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.14);
+            border: 1px solid rgba(255,255,255,0.28);
+            backdrop-filter: blur(4px);
+            margin-bottom: 18px;
+        }
+
+        .slide-title {
+            font-size: 40px;
+            font-weight: 800;
+            line-height: 1.12;
+            letter-spacing: -0.02em;
+            margin: 0 0 14px 0;
+            text-shadow: 0 2px 18px rgba(0,0,0,0.18);
+        }
+        .slide-title em { font-style: normal; color: #bfdbfe; }
+
+        .slide-sub {
+            font-size: 15px;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.88);
+            margin: 0 0 24px 0;
+            max-width: 460px;
+        }
+
+        .slide-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff;
+            color: #1d4ed8;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 12px 26px;
+            border-radius: 999px;
+            text-decoration: none;
+            box-shadow: 0 8px 22px rgba(2, 20, 60, 0.28);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .slide-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(2, 20, 60, 0.34);
+            color: #1d4ed8;
+        }
+
+        /* Điện thoại minh hoạ dựng bằng CSS */
+        .slide-visual {
+            position: absolute;
+            right: 64px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-8deg);
+            z-index: 1;
+            width: 168px;
+            height: 336px;
+            border-radius: 28px;
+            background: linear-gradient(160deg, #f8fafc 0%, #cbd5e1 100%);
+            padding: 7px;
+            box-shadow: 0 26px 60px rgba(2, 12, 40, 0.45);
+        }
+        .slide-visual .screen {
+            width: 100%;
+            height: 100%;
+            border-radius: 22px;
+            background: linear-gradient(165deg, #0f2557 0%, #1d4ed8 55%, #60a5fa 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .slide-visual .screen::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(115deg, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0) 48%);
+        }
+        .slide-visual .notch {
+            position: absolute;
+            top: 9px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 54px;
+            height: 7px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.35);
+            z-index: 2;
+        }
+        .slide-badge {
+            position: absolute;
+            right: 18px;
+            bottom: 26px;
+            z-index: 3;
+            background: #fff;
+            color: #1d4ed8;
+            border-radius: 14px;
+            padding: 10px 16px;
+            text-align: center;
+            box-shadow: 0 10px 26px rgba(2, 12, 40, 0.32);
+        }
+        .slide-badge strong { display: block; font-size: 20px; font-weight: 800; line-height: 1; }
+        .slide-badge span { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; }
 
         @@keyframes fade {
             from { opacity: 0; }
@@ -212,10 +354,126 @@
             transition: transform 0.2s;
         }
         .right-promo-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        .right-promo-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+
+        .right-promo-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+            padding: 18px 20px;
+            color: #fff;
+            text-decoration: none;
+            overflow: hidden;
+        }
+        .right-promo-item::after {
+            content: '';
+            position: absolute;
+            right: -46px;
+            bottom: -46px;
+            width: 132px;
+            height: 132px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.12);
+        }
+        .promo-a { background: linear-gradient(135deg, #0b2a6f 0%, #2563eb 100%); }
+        .promo-b { background: linear-gradient(135deg, #1d4ed8 0%, #38bdf8 100%); }
+        .promo-c { background: linear-gradient(135deg, #0a1a3c 0%, #1746b3 100%); }
+
+        .right-promo-item .promo-icon {
+            position: relative;
+            z-index: 2;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.18);
+            border: 1px solid rgba(255,255,255,0.25);
+            font-size: 17px;
+            margin-bottom: 4px;
+        }
+        .right-promo-item .promo-title {
+            position: relative;
+            z-index: 2;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+        .right-promo-item .promo-desc {
+            position: relative;
+            z-index: 2;
+            font-size: 12px;
+            color: rgba(255,255,255,0.82);
+            line-height: 1.45;
+        }
+
+        /* Banner ngang dưới hero */
+        .wide-banner {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            padding: 34px 44px;
+            margin-bottom: 32px;
+            color: #fff;
+            background: linear-gradient(110deg, #0b2a6f 0%, #1d4ed8 52%, #2f8ff0 100%);
+            box-shadow: 0 6px 24px rgba(11, 42, 111, 0.22);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+        .wide-banner::before {
+            content: '';
+            position: absolute;
+            right: -60px;
+            top: -90px;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 68%);
+        }
+        .wide-banner-copy { position: relative; z-index: 2; }
+        .wide-banner-copy h4 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            margin: 0 0 8px 0;
+        }
+        .wide-banner-copy p {
+            margin: 0;
+            font-size: 14px;
+            color: rgba(255,255,255,0.85);
+        }
+        .wide-banner-perks {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .perk {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.22);
+            border-radius: 12px;
+            padding: 14px 20px;
+            min-width: 132px;
+            backdrop-filter: blur(4px);
+        }
+        .perk strong {
+            display: block;
+            font-size: 19px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 2px;
+        }
+        .perk span {
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.78);
         }
 
         /* Section Heading */
@@ -391,6 +649,8 @@
         @@media (max-width: 1200px) {
             .product-list { grid-template-columns: repeat(4, 1fr); }
             .home-top-grid { grid-template-columns: 200px 1fr 200px; }
+            .slide-title { font-size: 32px; }
+            .slide-visual { width: 132px; height: 264px; right: 36px; }
         }
         @@media (max-width: 1024px) {
             .home-top-grid { grid-template-columns: 220px 1fr; }
@@ -401,6 +661,72 @@
             .home-top-grid { grid-template-columns: 1fr; }
             .home-sidebar { display: none; }
             .product-list { grid-template-columns: repeat(2, 1fr); }
+            .top-banner-slider .slide-item { padding: 28px; }
+            .slide-copy { max-width: 100%; }
+            .slide-title { font-size: 26px; }
+            .slide-visual, .slide-badge { display: none; }
+            .wide-banner { padding: 26px; }
+            .wide-banner-copy h4 { font-size: 21px; }
+            .perk { min-width: 108px; padding: 12px 16px; }
+        }
+
+        /* Phân trang */
+        .pagination-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin: 8px 0 48px 0;
+        }
+        .pagination-info { font-size: 13px; color: var(--text-muted); }
+        .pagination-info strong { color: var(--text-main); }
+
+        .pagination-list {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .page-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 38px;
+            height: 38px;
+            padding: 0 12px;
+            border-radius: 8px;
+            background: var(--surface-color);
+            border: 1px solid rgba(0,0,0,0.08);
+            color: var(--text-main);
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.15s;
+        }
+        .page-link:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        .page-link.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #fff;
+        }
+        .page-link.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .page-ellipsis {
+            padding: 0 4px;
+            color: var(--text-muted);
+        }
+
+        @@media (max-width: 768px) {
+            .pagination-bar { justify-content: center; }
+            .pagination-info { width: 100%; text-align: center; }
         }
 
         /* Breadcrumb Navigation */
@@ -463,10 +789,49 @@
                 <div class="top-banner-slider" style="flex:1;">
                     <div class="slider-arrow prev" onclick="moveSlide(-1)"><i class="bi bi-chevron-left"></i></div>
                     <div class="slide-container">
-                        <img src="/images/Giao diện trang chủ/ảnh để chuyển slide/Ảnh ban đầu.png" class="slide-item active" alt="Banner 1">
-                        <img src="/images/Giao diện trang chủ/ảnh để chuyển slide/Ảnh 2.png" class="slide-item" alt="Banner 2">
-                        <img src="/images/Giao diện trang chủ/ảnh để chuyển slide/Ảnh 3.png" class="slide-item" alt="Banner 3">
-                        <img src="/images/Giao diện trang chủ/ảnh để chuyển slide/Ảnh 4.png" class="slide-item" alt="Banner 4">
+                        <div class="slide-item theme-deep active">
+                            <div class="slide-copy">
+                                <div class="slide-eyebrow"><i class="bi bi-lightning-charge-fill"></i> TECHBLUE · Ưu đãi tháng này</div>
+                                <h2 class="slide-title">Sắm đồ công nghệ<br><em>giảm đến 30%</em></h2>
+                                <p class="slide-sub">Điện thoại chính hãng, bảo hành 12 tháng, trả góp 0% và giao hàng trong 2 giờ tại nội thành.</p>
+                                <a href="/Home/Index" class="slide-cta">Mua ngay <i class="bi bi-arrow-right"></i></a>
+                            </div>
+                            <div class="slide-visual"><div class="screen"></div><div class="notch"></div></div>
+                            <div class="slide-badge"><strong>-30%</strong><span>Toàn bộ</span></div>
+                        </div>
+
+                        <div class="slide-item theme-bright">
+                            <div class="slide-copy">
+                                <div class="slide-eyebrow"><i class="bi bi-stars"></i> Điện thoại mới</div>
+                                <h2 class="slide-title">Máy mới lên kệ<br><em>giá tốt mỗi ngày</em></h2>
+                                <p class="slide-sub">Cập nhật liên tục các model mới nhất từ Apple, Samsung, Xiaomi, Oppo, Honor với mức giá niêm yết minh bạch.</p>
+                                <a href="/Home/Index" class="slide-cta">Xem sản phẩm <i class="bi bi-arrow-right"></i></a>
+                            </div>
+                            <div class="slide-visual"><div class="screen"></div><div class="notch"></div></div>
+                            <div class="slide-badge"><strong>NEW</strong><span>Vừa mở bán</span></div>
+                        </div>
+
+                        <div class="slide-item theme-night">
+                            <div class="slide-copy">
+                                <div class="slide-eyebrow"><i class="bi bi-gift-fill"></i> Galaxy S26 Ultra</div>
+                                <h2 class="slide-title">Galaxy S26 Ultra<br><em>quà tặng đến 3 triệu</em></h2>
+                                <p class="slide-sub">Đặt trước nhận bộ quà công nghệ, ưu đãi thu cũ đổi mới và gói bảo hành rơi vỡ 12 tháng.</p>
+                                <a href="/Home/Index" class="slide-cta">Đặt trước <i class="bi bi-arrow-right"></i></a>
+                            </div>
+                            <div class="slide-visual"><div class="screen"></div><div class="notch"></div></div>
+                            <div class="slide-badge"><strong>3TR</strong><span>Giá trị quà</span></div>
+                        </div>
+
+                        <div class="slide-item theme-sky">
+                            <div class="slide-copy">
+                                <div class="slide-eyebrow"><i class="bi bi-headphones"></i> Phụ kiện chính hãng</div>
+                                <h2 class="slide-title">Phụ kiện sale<br><em>giảm đến 50%</em></h2>
+                                <p class="slide-sub">Tai nghe, sạc nhanh, cáp và ốp lưng chính hãng — mua kèm máy giảm thêm cho mọi đơn hàng.</p>
+                                <a href="/Home/Index" class="slide-cta">Khám phá <i class="bi bi-arrow-right"></i></a>
+                            </div>
+                            <div class="slide-visual"><div class="screen"></div><div class="notch"></div></div>
+                            <div class="slide-badge"><strong>-50%</strong><span>Phụ kiện</span></div>
+                        </div>
                     </div>
                     <div class="slider-arrow next" onclick="moveSlide(1)"><i class="bi bi-chevron-right"></i></div>
                 </div>
@@ -492,13 +857,36 @@
 
             <!-- Right Promos -->
             <div class="right-promo-banners">
-                <div class="right-promo-item"><img src="/images/Giao diện trang chủ/ảnh để chuyển slide/Ảnh 2.png" alt="Khuyến mãi 1"></div>
-                <div class="right-promo-item"><img src="/images/Giao diện trang chủ/ảnh để chuyển slide/Ảnh 3.png" alt="Khuyến mãi 2"></div>
-                <div class="right-promo-item"><img src="/images/Giao diện trang chủ/ảnh để chuyển slide/Ảnh 4.png" alt="Khuyến mãi 3"></div>
+                <a href="/Home/Index" class="right-promo-item promo-a">
+                    <div class="promo-icon"><i class="bi bi-credit-card-2-front"></i></div>
+                    <div class="promo-title">Trả góp 0% lãi suất</div>
+                    <div class="promo-desc">Duyệt nhanh qua thẻ tín dụng, không phí chuyển đổi.</div>
+                </a>
+                <a href="/Home/Index" class="right-promo-item promo-b">
+                    <div class="promo-icon"><i class="bi bi-truck"></i></div>
+                    <div class="promo-title">Giao hàng trong 2 giờ</div>
+                    <div class="promo-desc">Áp dụng nội thành, miễn phí cho đơn từ 5 triệu.</div>
+                </a>
+                <a href="/Home/Index" class="right-promo-item promo-c">
+                    <div class="promo-icon"><i class="bi bi-shield-check"></i></div>
+                    <div class="promo-title">Bảo hành 12 tháng</div>
+                    <div class="promo-desc">Chính hãng toàn quốc, 1 đổi 1 trong 30 ngày đầu.</div>
+                </a>
             </div>
         </div>
-        
-        <img src="/images/Giao diện trang chủ/ảnh để chuyển slide/Ảnh 5.png" alt="Khuyến mãi ngang" style="width: 100%; height: 450px; object-fit: fill; display: block; margin: 0 auto 32px auto; border-radius:8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
+
+        <section class="wide-banner">
+            <div class="wide-banner-copy">
+                <h4>TECHBLUE — Đỉnh cao công nghệ</h4>
+                <p>Ưu đãi lớn nhất trong tháng, áp dụng cho toàn bộ điện thoại và phụ kiện chính hãng.</p>
+            </div>
+            <div class="wide-banner-perks">
+                <div class="perk"><strong>30%</strong><span>Giảm tối đa</span></div>
+                <div class="perk"><strong>500K</strong><span>Voucher</span></div>
+                <div class="perk"><strong>0%</strong><span>Lãi suất</span></div>
+                <div class="perk"><strong>2H</strong><span>Giao hàng</span></div>
+            </div>
+        </section>
 
         <div class="section-header">
             <h3>SẢN PHẨM NỔI BẬT</h3>
@@ -570,10 +958,7 @@
 
                     <form asp-controller="Cart" asp-action="Add" method="post" style="width: 100%;">
                         @Html.AntiForgeryToken()
-                        <input type="hidden" name="id" value="@item.ProductId" />
-                        <input type="hidden" name="name" value="@item.Name" />
-                        <input type="hidden" name="price" value="@((int)item.Price)" />
-                        <input type="hidden" name="img" value="@item.ImageUrl" />
+                        <input type="hidden" name="productId" value="@item.ProductId" />
                         <button type="submit" class="add-to-cart-btn">
                             <i class="bi bi-cart-plus"></i> Thêm vào giỏ
                         </button>
@@ -589,6 +974,76 @@
             </div>
         }
     </div>
+
+    @{
+        var currentPage = ViewBag.CurrentPage as int? ?? 1;
+        var totalPages = ViewBag.TotalPages as int? ?? 1;
+        var totalItems = ViewBag.TotalItems as int? ?? 0;
+        var qCategoryId = Context.Request.Query["categoryId"].ToString();
+        var qSearch = Context.Request.Query["searchString"].ToString();
+
+        Func<int, string> pageUrl = p =>
+        {
+            var parts = new List<string>();
+            if (!string.IsNullOrEmpty(qCategoryId)) parts.Add($"categoryId={Uri.EscapeDataString(qCategoryId)}");
+            if (!string.IsNullOrEmpty(qSearch)) parts.Add($"searchString={Uri.EscapeDataString(qSearch)}");
+            parts.Add($"page={p}");
+            return "/Home/Index?" + string.Join("&", parts);
+        };
+    }
+
+    @if (totalPages > 1)
+    {
+        var windowStart = Math.Max(1, currentPage - 2);
+        var windowEnd = Math.Min(totalPages, windowStart + 4);
+        windowStart = Math.Max(1, windowEnd - 4);
+
+        <nav class="pagination-bar" aria-label="Phân trang sản phẩm">
+            <div class="pagination-info">
+                Hiển thị trang <strong>@currentPage</strong> / @totalPages — tổng @totalItems sản phẩm
+            </div>
+            <ul class="pagination-list">
+                <li>
+                    <a class="page-link @(currentPage <= 1 ? "disabled" : "")"
+                       href="@(currentPage <= 1 ? "#" : pageUrl(currentPage - 1))"
+                       aria-label="Trang trước">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+
+                @if (windowStart > 1)
+                {
+                    <li><a class="page-link" href="@pageUrl(1)">1</a></li>
+                    @if (windowStart > 2)
+                    {
+                        <li><span class="page-ellipsis">…</span></li>
+                    }
+                }
+
+                @for (var p = windowStart; p <= windowEnd; p++)
+                {
+                    <li><a class="page-link @(p == currentPage ? "active" : "")" href="@pageUrl(p)">@p</a></li>
+                }
+
+                @if (windowEnd < totalPages)
+                {
+                    @if (windowEnd < totalPages - 1)
+                    {
+                        <li><span class="page-ellipsis">…</span></li>
+                    }
+                    <li><a class="page-link" href="@pageUrl(totalPages)">@totalPages</a></li>
+                }
+
+                <li>
+                    <a class="page-link @(currentPage >= totalPages ? "disabled" : "")"
+                       href="@(currentPage >= totalPages ? "#" : pageUrl(currentPage + 1))"
+                       aria-label="Trang sau">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    }
 </div>
 
 @section Scripts {

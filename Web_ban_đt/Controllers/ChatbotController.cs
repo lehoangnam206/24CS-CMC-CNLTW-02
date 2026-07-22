@@ -38,13 +38,13 @@ namespace TechStoreWeb.Controllers
 
         private async Task<(string CustomerKey, int? UserId)> ResolveCustomerIdentityAsync(CancellationToken cancellationToken)
         {
-            var username = HttpContext.Session.GetString("Username");
-            if (!string.IsNullOrWhiteSpace(username))
+            var sessionUserId = HttpContext.Session.GetInt32("UserId");
+            if (sessionUserId != null)
             {
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username, cancellationToken);
-                if (user != null)
+                var exists = await _context.Users.AnyAsync(u => u.UserId == sessionUserId.Value, cancellationToken);
+                if (exists)
                 {
-                    return ($"user:{user.UserId}", user.UserId);
+                    return ($"user:{sessionUserId.Value}", sessionUserId.Value);
                 }
             }
 
